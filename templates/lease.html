@@ -1,0 +1,59 @@
+<div>
+
+    <!-- table of past due leases -->
+    <table style="width:100%">
+        <h2>Past Due Leases</h2>
+        <tr>
+            <th>Unit</th>
+            <th>Tenant</th>
+            <th>Balance</th>
+            <th>Past Due</th>
+            <th>Since</th>
+        </tr>
+        <tr ng-repeat="lease in arLeaseCtl.pastDue() | orderBy:'-balance()'">
+            <td>{{ lease.unit.unitId }}</td>
+            <td>{{ lease.tenant }}</td>
+            <td>{{ lease.balance() | currency }}</td>
+            <td>{{ lease.daysPastDue() }}</td>
+            <td>{{ lease.earliestUnpaidInvoiceDate() | date }}</td>
+        </tr>
+    </table>
+
+    <!-- table of leases -->
+    <table style="width:100%">
+        <h2>Leases</h2>
+
+        <input placeholder="Search Tenant Name" ng-model="arLeaseCtl.leaseFilter.tenant">
+        <input placeholder="Search Unit" ng-model="arLeaseCtl.leaseFilter.unit.unitId">
+        <tr>
+            <th>Unit</th>
+            <th>Tenant</th>
+            <th>Date</th>
+            <th>Rate</th>
+            <th>Period</th>
+            <th>Balance</th>
+            <th>Paid Thru</th>
+        </tr>
+        <tr ng-repeat="lease in arLeaseCtl.leases | orderBy:'unit.unitId' | filter:arLeaseCtl.leaseFilter">
+            <td>{{ lease.unit.unitId }}</td>
+            <td>{{ lease.tenant }}</td>
+            <td>{{ lease.originalDate | date}}</td>
+            <td>{{ lease.rate | currency }}</td>
+            <td>{{ lease.period }}</td>
+            <td>{{ lease.balance() | currency }}</td>
+            <td>{{ lease.earliestUnpaidInvoiceDate() | date }}</td>
+        </tr>
+    </table>
+
+    <!-- form for creation of a new lease -->
+    <h2>Add Lease Form</h2>
+    <form ng-submit="arLeaseCtl.addLease()">
+        <input placeholder="Unit" type="text" ng-model="arLeaseCtl.newLease.unit.unitId" required="" />
+        <input placeholder="Tenant" type="text" ng-model="arLeaseCtl.newLease.tenant" required="" />
+        <input placeholder="Date (today)" type="date" ng-model="arLeaseCtl.newLease.originalDate" />
+        <input placeholder="Rate ($85)" type="number" ng-model="arLeaseCtl.newLease.rate" />
+        <input placeholder="Period (monthly)" type="text" ng-model="arLeaseCtl.newLease.period" />
+        <button type="submit">Add Lease</button>
+    </form>
+
+</div>

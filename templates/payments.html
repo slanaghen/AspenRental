@@ -1,0 +1,19 @@
+<div>
+
+    <!-- lease payment histories -->
+    <table style="width:100%">
+        <h2>Payment Histories</h2>
+        <input placeholder="Search Tenant Name" ng-model="arLeaseCtl.pmtFilter.tenant">
+        <input placeholder="Search Unit" ng-model="arLeaseCtl.pmtFilter.unit.unitId">
+        <ul ng-repeat="lease in arLeaseCtl.leases | filter:arLeaseCtl.pmtFilter">
+            <li>{{ lease.unit.unitId }} {{ lease.tenant }}</li>
+            <ul ng-repeat="invoice in lease.invoices">
+                <li>Invoice: {{ invoice.dueDate | date }} {{ invoice.amountDue | currency }}</li>
+                <ul ng-repeat="payment in invoice.payments">
+                    <li>Payment: {{ payment.date | date }} {{ payment.amount | currency }}</li>
+                </ul>
+            </ul>
+        </ul>
+    </table>
+
+</div>

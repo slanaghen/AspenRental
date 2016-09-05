@@ -1,0 +1,57 @@
+<div>
+
+    <!-- table of unit types -->
+    <table style="width:100%">
+        <h2>Unit Types</h2>
+        <tr>
+            <th>Size</th>
+            <th>Description</th>
+            <th>Rate</th>
+            <!--<th>Quantity</th>-->
+        </tr>
+        <tr ng-repeat="unitType in arUnitCtl.unitTypes | orderBy:'size' ">
+            <td>{{ unitType.size }}</td>
+            <td>{{ unitType.description }}</td>
+            <td>{{ unitType.defaultRate  | currency}} {{ unitType.defaultPeriod }}</td>
+            <!--<td>{{ arUnitCtl.getNumOfType(unitType.size) }}</td>-->
+        </tr>
+    </table>
+
+    <!-- table of units -->
+    <table style="width:100%">
+        <h2>Units</h2>
+        <tr>
+            <th>Unit</th>
+            <th>Size</th>
+            <th>Rate</th>
+            <th>Status</th>
+        </tr>
+        <tr ng-repeat="unit in arUnitCtl.units | orderBy:'unitId' ">
+            <td>{{ unit.unitId }}</td>
+            <td>{{ unit.unitType.size }}</td>
+            <td>{{ unit.unitType.defaultRate  | currency}}</td>
+            <td>{{ unit.status }}</td>
+        </tr>
+    </table>
+
+    <!-- form for creation of a new unit -->
+    <h2>Add Unit Form</h2>
+    <form ng-submit="arUnitCtl.addUnit()">
+        <input placeholder="Unit" type="text" ng-model="arUnitCtl.newUnit.unitId" required="" />
+        <input placeholder="Type " type="text" ng-model="arUnitCtl.newUnit.unitType.unit" />
+        <input placeholder="Status" type="text" ng-model="arUnitCtl.newUnit.status" />
+        <button type="submit">Add Unit</button>
+    </form>
+
+    <!-- form for creation of a new unit type -->
+    <h2>Add Unit Type Form</h2>
+    <form ng-submit="arUnitCtl.addUnit()">
+        <input placeholder="Size " type="text" ng-model="arUnitCtl.newUnit.size" />
+        <input placeholder="Description" type="text" ng-model="arUnitCtl.newUnit.size" />
+        <input placeholder="Default Rate" type="number" ng-model="arUnitCtl.newUnit.defaultRate" />
+        <input placeholder="Default Period" type="text" ng-model="arUnitCtl.newUnit.defaultPeriod" />
+        <input placeholder="Default Num Periods" type="number" ng-model="arUnitCtl.newUnit.defaultNumPeriods" />
+        <button type="submit">Add Unit</button>
+    </form>    
+
+</div>

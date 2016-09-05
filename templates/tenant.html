@@ -1,0 +1,50 @@
+<div>
+
+    <!-- table of tenants -->
+    <table style="width:100%">
+        <h2>Tenants</h2>
+        <tr>
+            <th>Name</th>
+            <th>Address</th>
+            <th>Cell Phone</th>
+            <th>EMail</th>
+        </tr>
+        <tr ng-repeat="tenant in arTenantCtl.tenants | orderBy:'name'">
+            <td>{{ tenant.name }}</td>
+            <td>{{ tenant.address }}, {{ tenant.city }}, {{ tenant.state }} {{ tenant.zip }}</td>
+            <td>{{ tenant.cellPhone }}</td>
+            <td>{{ tenant.email }}</td>
+        </tr>
+    </table>
+
+    <!-- form for creation of a new tenant -->
+    <h2>Add Tenant Form</h2>
+    <form ng-submit="arTenantCtl.addTenant()">
+        <input placeholder="Firstname" type="text" ng-model="arTenantCtl.newTenant.firstName" required="" />
+        <input placeholder="Lastname" type="text" ng-model="arTenantCtl.newTenant.lastName" required="" />
+        <input placeholder="Address" type="text" ng-model="arTenantCtl.newTenant.address" required="" />
+        <input placeholder="City (Salida)" type="text" ng-model="arTenantCtl.newTenant.city" />
+        <input placeholder="State (CO)" type="text" ng-model="arTenantCtl.newTenant.state" />
+        <input placeholder="Zip (81210)" type="text" ng-model="arTenantCtl.newTenant.zip" />
+        <input placeholder="Phone" type="text" ng-model="arTenantCtl.newTenant.cellPhone" required="" />
+        <input placeholder="EMail" type="text" ng-model="arTenantCtl.newTenant.email" name="uEmail" required="" />
+        <button type="submit">Add Tenant</button>
+    </form>
+
+    <!-- form for creation of a new tenant -->
+    <!-- TODO -->
+    <h2>Edit Tenant Form</h2>
+    <input placeholder="Search Tenant Name" ng-model="arTenantCtl.pmtFilter.tenant">
+    <form class="form-inline well" ng-submit="arTenantCtl.editTenant()">
+        <input class="form-control" type="text" placeholder="Firstname" ng-model="arTenantCtl.editTenant.firstName" required="" />
+        <input class="form-control" type="text" placeholder="Lastname" ng-model="arTenantCtl.editTenant.lastName" required="" />
+        <input class="form-control" type="text" placeholder="Address" ng-model="arTenantCtl.editTenant.address" required="" />
+        <input class="form-control" type="text" placeholder="City (Salida)" ng-model="arTenantCtl.editTenant.city" />
+        <input class="form-control" type="text" placeholder="State (CO)" ng-model="arTenantCtl.editTenant.state" />
+        <input class="form-control" type="text" placeholder="Zip (81210)" ng-model="arTenantCtl.editTenant.zip" />
+        <input class="form-control" type="text" placeholder="Phone" ng-model="arTenantCtl.editTenant.cellPhone" required="" />
+        <input class="form-control" type="text" placeholder="EMail" ng-model="arCtarTenantCtlrlr.editTenant.email" name="uEmail" required="" />
+        <button type="submit">Update Tenant</button>
+    </form>
+
+</div>
