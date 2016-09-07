@@ -46,13 +46,13 @@
     </table>
 
     <!-- form for creation of a new lease -->
-    <h2>Add Lease Form</h2>
+    <h2>Add Lease</h2>
     <form ng-submit="arLeaseCtl.addLease()">
         <input placeholder="Unit" type="text" ng-model="arLeaseCtl.newLease.unit.unitId" required="" />
         <input placeholder="Tenant" type="text" ng-model="arLeaseCtl.newLease.tenant" required="" />
         <input placeholder="Date (today)" type="date" ng-model="arLeaseCtl.newLease.originalDate" />
         <input placeholder="Rate ($85)" type="number" ng-model="arLeaseCtl.newLease.rate" />
-        <input placeholder="Period (monthly)" type="text" ng-model="arLeaseCtl.newLease.period" />
+        <input placeholder="Period (month)" type="text" ng-model="arLeaseCtl.newLease.period" />
         <button type="submit">Add Lease</button>
     </form>
 

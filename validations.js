@@ -37,7 +37,7 @@ var validateTenant = function (tenant) {
     if (patt.test(tenant.email) === false) {
         return false;
     };
-
+    
     return true;
 };
 
@@ -52,6 +52,19 @@ String.prototype.capitalize = function () {
 
 String.prototype.formatPhone = function () {
     var re = /\(?(\d{3})\)?[- ]?(\d{3})[- ]?(\d{4})/g;
-    var subst = '$1 $2-$3';
+    var subst = '$1-$2-$3';
     return this.replace(re, subst);
 };
+
+// TODO:
+// Paralax
+// var jumboHeight = $('.jumbotron').outerHeight();
+// function parallax() {
+//     var scrolled = $(window).scrollTop();
+//     $('.bg').css('height', (jumboHeight - scrolled) + 'px');
+// }
+
+// $(window).scroll(function (e) {
+//     parallax();
+// });
+

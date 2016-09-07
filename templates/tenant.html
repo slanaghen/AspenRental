@@ -18,7 +18,7 @@
     </table>
 
     <!-- form for creation of a new tenant -->
-    <h2>Add Tenant Form</h2>
+    <h2>Add Tenant</h2>
     <form ng-submit="arTenantCtl.addTenant()">
         <input placeholder="Firstname" type="text" ng-model="arTenantCtl.newTenant.firstName" required="" />
         <input placeholder="Lastname" type="text" ng-model="arTenantCtl.newTenant.lastName" required="" />
@@ -33,7 +33,7 @@
 
     <!-- form for creation of a new tenant -->
     <!-- TODO -->
-    <h2>Edit Tenant Form</h2>
+    <h2>Edit Tenant</h2>
     <input placeholder="Search Tenant Name" ng-model="arTenantCtl.pmtFilter.tenant">
     <form class="form-inline well" ng-submit="arTenantCtl.editTenant()">
         <input class="form-control" type="text" placeholder="Firstname" ng-model="arTenantCtl.editTenant.firstName" required="" />

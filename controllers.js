@@ -5,11 +5,14 @@ Router.$inject = ['$routeProvider'];
 // $routeProvider comes from the ngRoute module
 function Router($routeProvider) {
     // If a user tries to go to a page that doesn't exist, take them back to the home page
-    $routeProvider.otherwise({ redirectTo: '/' });
+    $routeProvider.otherwise({ redirectTo: '/home' });
     // This is where we define our routes
     $routeProvider
-        .when('/', {
+        .when('/home/', {
             templateUrl: '/templates/home.html'
+        })
+        .when('/action/', {
+            templateUrl: '/templates/action.html'
         })
         .when('/tenant/', {
             templateUrl: '/templates/tenant.html',
@@ -26,6 +29,15 @@ function Router($routeProvider) {
             controller: 'ARUnitController as arUnitCtl'
         });
 };
+// TODO: Custom directive template, to insert payment row element
+// angular.module('AspenRental')
+//     .directive('helloWorld', function() {
+//   return {
+//       restrict: 'E',
+//       replace: 'true',
+//       template: '<h3>Hello World!!</h3>'
+//   };
+// });
 
 
 // UNIT CONTROLLER
@@ -130,7 +142,10 @@ function arLeaseController() {
     arLeaseCtl.invoiceAll = function () {
         console.debug("Invoicing all leases");
         for (var i = 0; i < arLeaseCtl.leases.length; i++) {
-            arLeaseCtl.leases[i].makeInvoice(arLeaseCtl.leases[i]);
+            // if nextDueDate is less than 15 days in the future, makeInvoice
+            if (arLeaseCtl.leases[i].nextDueDate() < (Date.now() + (15 * 24 * 60 * 60 * 1000))) {
+                arLeaseCtl.leases[i].makeInvoice(arLeaseCtl.leases[i]);
+            };
         };
     };
 };

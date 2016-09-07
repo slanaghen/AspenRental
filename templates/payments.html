@@ -1,19 +1,50 @@
 <div>
 
     <!-- lease payment histories -->
-    <table style="width:100%">
-        <h2>Payment Histories</h2>
-        <input placeholder="Search Tenant Name" ng-model="arLeaseCtl.pmtFilter.tenant">
-        <input placeholder="Search Unit" ng-model="arLeaseCtl.pmtFilter.unit.unitId">
-        <ul ng-repeat="lease in arLeaseCtl.leases | filter:arLeaseCtl.pmtFilter">
-            <li>{{ lease.unit.unitId }} {{ lease.tenant }}</li>
-            <ul ng-repeat="invoice in lease.invoices">
-                <li>Invoice: {{ invoice.dueDate | date }} {{ invoice.amountDue | currency }}</li>
-                <ul ng-repeat="payment in invoice.payments">
-                    <li>Payment: {{ payment.date | date }} {{ payment.amount | currency }}</li>
-                </ul>
-            </ul>
-        </ul>
-    </table>
+    <h2>Payment Histories</h2>
+    <input placeholder="Search Tenant Name" ng-model="arLeaseCtl.pmtFilter.tenant">
+    <input placeholder="Search Unit" ng-model="arLeaseCtl.pmtFilter.unit.unitId">
+
+    <div ng-repeat="lease in arLeaseCtl.leases | orderBy:'unit.unitId' | filter:arLeaseCtl.pmtFilter">
+        <table style="width:100%">
+            <tr>
+                <th>Unit</th>
+                <th>Tenant</th>
+                <th>Due Date</th>
+                <th>Charge</th>
+                <th>Pmt Date</th>
+                <th>Payment</th>
+                <!--<th>Balance</th>-->
+            </tr>
+            <tbody ng-repeat="invoice in lease.invoices">
+                <tr ng-repeat="payment in invoice.payments">
+                    <!-- TODO: how to display lease/invoice only on first line of entry -->
+                    <!--<td ng-show="invoice.$index===1">{{ lease.unit.unitId }}</td>-->
+                    <td>{{ lease.unit.unitId }}</td>
+                    <td>{{ lease.tenant }}</td>
+                    <td>{{ invoice.dueDate | date }}</td>
+                    <td>{{ invoice.amountDue | currency }}</td>
+                    <td>{{ payment.date | date }}</td>
+                    <td>{{ payment.amount | currency }}</td>
+                    <!--TODO: How to display balance as of a given date-->
+                    <!--<td>{{ lease.balanceAsOf(payment.date) | currency }}</td>-->
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+
+    <!--<div ng-repeat="lease in arLeaseCtl.leases | orderBy:'unit.unitId' | filter:arLeaseCtl.pmtFilter">
+        <div ng-repeat="invoice in lease.invoices">
+            <div ng-repeat="payment in invoice.payments">
+                <td>{{ lease.unit.unitId }}</td>
+                <td>{{ lease.tenant }}</td>
+                <td>{{ invoice.dueDate | date }}</td>
+                <td>{{ invoice.amountDue | currency }}</td>
+                <td>{{ payment.date | date }}</td>
+                <td>{{ payment.amount | currency }}</td>
+            </div>
+        </div>
+    </div>-->
 
 </div>

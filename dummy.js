@@ -5,32 +5,32 @@ var dummyUnitTypes = [
 ];
 
 var dummyUnits = [
-    new Unit("S01", dummyUnitTypes[0], "Available"),
-    new Unit("S02", dummyUnitTypes[0], "Available"),
-    new Unit("S03", dummyUnitTypes[0], "Available"),
-    new Unit("S04", dummyUnitTypes[0], "Available"),
-    new Unit("S05", dummyUnitTypes[0], "Available"),
-    new Unit("S06", dummyUnitTypes[0], "Available"),
-    new Unit("S07", dummyUnitTypes[1], "Available"),
-    new Unit("S08", dummyUnitTypes[2], "Available")
+    new Unit("S01", dummyUnitTypes[0]),
+    new Unit("S02", dummyUnitTypes[0]),
+    new Unit("S03", dummyUnitTypes[0]),
+    new Unit("S04", dummyUnitTypes[0]),
+    new Unit("S05", dummyUnitTypes[0]),
+    new Unit("S06", dummyUnitTypes[0]),
+    new Unit("S07", dummyUnitTypes[1]),
+    new Unit("S08", dummyUnitTypes[2]),
 ];
 
 var dummyTenants = [
     new Tenant("John", "Doe", "123 Main St", "Salida", "CO", "80121", "3035555555", "jdoe@gmail.com"),
     new Tenant("Jane", "Doe", "100 77th St", "Salida", "CO", "80121", "(303)555-4444", "jdoe@yahoo.com"),
     new Tenant("Jill", "Doe", "101 11th St", "Salida", "CO", "80121", "303-555-2222", "jjdoe@yahoo.com"),
-    new Tenant("Joe", "Blow", "5th & Main St", "Salida", "CO", "80121", "303-555-3333", "jblow@gmail.com")
+    new Tenant("Joe", "Blow", "5th & Main St", "Salida", "CO", "80121", "303-555-3333", "jblow@gmail.com"),
 ];
 
 var dummyLeases = [
     new Lease(dummyUnits[3], "John Doe", new Date(2016, 2, 1)),
     new Lease(dummyUnits[4], "Jane Doe", new Date(2016, 2, 1)),
     new Lease(dummyUnits[5], "Jill Doe", new Date(2016, 2, 1)),
-    new Lease(dummyUnits[6], "Joe Blow", new Date(2016, 2, 1))
+    new Lease(dummyUnits[6], "Joe Blow", new Date(2016, 2, 1)),
 ];
 
 for (var i = 0; i < 4; i++) {
-    for (var j = 0; j <= 5; j++) {
+    for (var j = 0; j <= 7; j++) {
         dummyLeases[i].makeInvoice();
     }
 }
@@ -67,9 +67,11 @@ dummyLeases[2].makePayment(85, new Date(2016, 6, 2));
 
 // Joe is varied, but on schedule with payments
 dummyLeases[3].makePayment(75, new Date(2016, 2, 2));
-dummyLeases[3].makePayment(100, new Date(2016, 3, 2));
+dummyLeases[3].makePayment(150, new Date(2016, 3, 2));
 dummyLeases[3].makePayment(100, new Date(2016, 4, 2));
 dummyLeases[3].makePayment(85, new Date(2016, 5, 2));
-dummyLeases[3].makePayment(150, new Date(2016, 6, 2));
+dummyLeases[3].makePayment(200, new Date(2016, 6, 2));
 dummyLeases[3].makePayment(10, new Date(2016, 7, 2));
-dummyLeases[3].makePayment(200, new Date(2016, 8, 2));
+dummyLeases[3].makePayment(100, new Date(2016, 8, 2));
+
+// TODO: test retired lease

@@ -3,17 +3,17 @@
     <!-- table of unit types -->
     <table style="width:100%">
         <h2>Unit Types</h2>
-        <tr>
+        <tr class="well2">
             <th>Size</th>
             <th>Description</th>
             <th>Rate</th>
-            <!--<th>Quantity</th>-->
+            <th>Quantity</th>
         </tr>
         <tr ng-repeat="unitType in arUnitCtl.unitTypes | orderBy:'size' ">
             <td>{{ unitType.size }}</td>
             <td>{{ unitType.description }}</td>
             <td>{{ unitType.defaultRate  | currency}} {{ unitType.defaultPeriod }}</td>
-            <!--<td>{{ arUnitCtl.getNumOfType(unitType.size) }}</td>-->
+            <td>{{ unitType.statusCount['Available'] }} / {{ unitType.count }}</td>
         </tr>
     </table>
 
@@ -35,7 +35,7 @@
     </table>
 
     <!-- form for creation of a new unit -->
-    <h2>Add Unit Form</h2>
+    <h2>Add Unit</h2>
     <form ng-submit="arUnitCtl.addUnit()">
         <input placeholder="Unit" type="text" ng-model="arUnitCtl.newUnit.unitId" required="" />
         <input placeholder="Type " type="text" ng-model="arUnitCtl.newUnit.unitType.unit" />
@@ -44,7 +44,7 @@
     </form>
 
     <!-- form for creation of a new unit type -->
-    <h2>Add Unit Type Form</h2>
+    <h2>Add Unit Type</h2>
     <form ng-submit="arUnitCtl.addUnit()">
         <input placeholder="Size " type="text" ng-model="arUnitCtl.newUnit.size" />
         <input placeholder="Description" type="text" ng-model="arUnitCtl.newUnit.size" />

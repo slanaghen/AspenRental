@@ -1,10 +1,12 @@
 class UnitType {
-    constructor(description, size = "10x10", rate = 85, period = 'monthly', numPeriods = 12) {
+    constructor(description, size = "10x10", rate = 85, period = 'month', numPeriods = 12) {
         this.description = description;             // description of this type of unit
         this.size = size;                           // size of this type of unit
         this.defaultRate = rate;                    // default rental rate for this type of unit
-        this.defaultPeriod = period.toLowerCase();  // default period for this type of unit (ie. monthly/quarterly/annual)
-        this.defaultNumPeriods = numPeriods;        // default number of periods for this type of unit (ie. 12 for monthly year long lease)
+        this.defaultPeriod = period.toLowerCase();  // default period for this type of unit (ie. month/quarter/year)
+        this.defaultNumPeriods = numPeriods;        // default number of periods for this type of unit (ie. 12 for month period year long lease)
+        this.count = 0;
+        this.statusCount = {'Available':0, 'Occupied':0, 'Unrentable':0};
     };
 };
 
@@ -13,7 +15,14 @@ class Unit {
         this.unitId = unit.toUpperCase();               // unit identifier
         this.unitType = type;                           // type of unit (10x10 storage, 1BR residence, etc)
         this.status = status.toLowerCase().capitalize();// status of this unit available/occupied/unrentable
+        this.unitType.count++;
+        this.unitType.statusCount[this.status]++; 
     };
+    changeStatus(to) {
+        this.unitType.statusCount[this.status]--;
+        this.unitType.statusCount[to]++;
+        this.status = to.toLowerCase().capitalize();
+    }
 };
 
 class Payment {
@@ -45,12 +54,13 @@ class Lease {
     constructor(unit, tenant, date = Date(), rate = unit.unitType.defaultRate,
         period = unit.unitType.defaultPeriod, numPeriods = unit.unitType.defaltNumPeriods) {
         this.unit = unit;               // unit being leased
-        this.unit.status = "Occupied";  // set the unit's status to occupied with the new lease
+        this.unit.changeStatus("Occupied");// set the unit's status to occupied with the new lease
+        // this.unit.status = "Occupied";  // set the unit's status to occupied with the new lease
         this.tenant = tenant;           // tenant's full name
         this.originalDate = date;       // date lease is signed
-        this.rate = rate;               // periodic (monthly/quarterly/annual) rent
-        this.period = period;           // monthly, quarterly or annual
-        this.numPeriods = numPeriods;   // ie. 12 period for a monthly year long lease
+        this.rate = rate;               // periodic (month/quarter/year) rent
+        this.period = period;           // month, quarter or year
+        this.numPeriods = numPeriods;   // ie. 12 period for a month period year long lease
         this.status = "Pending";        // Pending, Active or Retired
         this.invoices = [new Invoice(this, date)];  // list of invoices applied to this lease
     };
@@ -65,6 +75,21 @@ class Lease {
             total += balance;
         };
         console.debug("Lease Balance : " + this.unit.unitId + " $" + total);
+        return total;
+    };
+    balanceAsOf(asOfDate) {
+        var total = 0;
+        for (var i = 0; i < this.invoices.length; i++) {
+            // do not count future invoices in balance due.
+            if (this.invoices[i].dueDate.getTime() > Date.now()) { break; }
+            for (var j=0;j<=this.invocies[i].payments.length;j++) {
+                if (this.invoices[i].payments[j].date <= asOfDate) {
+                    var pmt = this.invoices[i].payments[j];
+                    total += pmt;
+                };
+            };
+        };
+        console.debug("Lease Balance as of "+ asOfDate + ": " + this.unit.unitId + " $" + total);
         return total;
     };
     // calculate the days past due from earliest unpaid invoice
@@ -87,11 +112,11 @@ class Lease {
         // note the due date of the most recent outstanding invoice
         var due = this.invoices[this.invoices.length - 1].dueDate
         // and increment the due date by the specified period
-        if (this.period === "monthly") {
+        if (this.period === "month") {
             return new Date(due.getFullYear(), due.getMonth() + 1, due.getDate());
-        } else if (this.period === "quarterly") {
+        } else if (this.period === "quarter") {
             return new Date(due.getFullYear(), due.getMonth() + 3, due.getDate());
-        } else if (this.period === "annual") {
+        } else if (this.period === "year") {
             return new Date(due.getFullYear() + 1, due.getMonth(), due.getDate());
         };
         console.error("Bad period " + this.period + " for lease on " + this.unit.unitId + " detected in NextDueDate.");
