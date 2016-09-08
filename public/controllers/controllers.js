@@ -5,7 +5,7 @@ Router.$inject = ['$routeProvider'];
 // $routeProvider comes from the ngRoute module
 function Router($routeProvider) {
     // If a user tries to go to a page that doesn't exist, take them back to the home page
-    $routeProvider.otherwise({ redirectTo: '/home' });
+    $routeProvider.otherwise({ redirectTo: '/' });
     // This is where we define our routes
     $routeProvider
         .when('/home/', {
@@ -64,12 +64,28 @@ function arUnitController() {
     // TODO: add validation
     arUnitCtl.addUnit = function () {
         if (validateUnit(arUnitCtl.newUnit)) {
-            arUnitCtl.units.push(arCtrlr.newUnit);
+            arUnitCtl.units.push(arUnitCtl.newUnit);
             arUnitCtl.newUnit.status = "Available";
             arUnitCtl.newUnit = {};
+            console.debug("Valid unit added");
             arUnitCtl.badUnit = false;
             // localStorage.setItem('units', JSON.stringify(arCtrlr.units));
         } else {
+            console.debug("Invalid unit added");
+            arUnitCtl.badUnit = true;
+        };
+    };
+    // add a new unitType
+    // TODO: add validation
+    arUnitCtl.addUnitType = function () {
+        if (validateUnitType(arUnitCtl.newUnitType)) {
+            arUnitCtl.unitTypes.push(arUnitCtl.newUnitType);
+            arUnitCtl.newUnitType = {};
+            console.debug("Valid unitType added");
+            arUnitCtl.badUnit = false;
+            // localStorage.setItem('units', JSON.stringify(arCtrlr.units));
+        } else {
+            console.debug("Invalid unitType added");
             arUnitCtl.badUnit = true;
         };
     };
@@ -87,11 +103,13 @@ function arTenantController() {
     // add a new customer
     arTenantCtl.addTenant = function () {
         if (validateTenant(arTenantCtl.newTenant)) {
-            arTenantCtl.tenants.push(arCtrlr.newTenant);
+            arTenantCtl.tenants.push(arTenantCtl.newTenant);
             arTenantCtl.newTenant = {};
+            console.debug("Valid tenant added");
             arTenantCtl.badTenant = false;
             // localStorage.setItem('tenants', JSON.stringify(arCtrlr.tenants));
         } else {
+            console.debug("Invalid tenant added");
             arTenantCtl.badTenant = true;
         };
     };
@@ -117,12 +135,14 @@ function arLeaseController() {
     // TODO: add validation
     arLeaseCtl.addLease = function () {
         if (validateLease(arLeaseCtl.newLease)) {
-            arLeaseCtl.leases.push(arCtrlr.newLease);
+            arLeaseCtl.leases.push(arLeaseCtl.newLease);
             arLeaseCtl.newLease.unit.available = false;
             arLeaseCtl.newLease = {};
+            console.debug("Valid lease added");
             arLeaseCtl.badLease = true;
             // localStorage.setItem('leases', JSON.stringify(arCtrlr.leases));
         } else {
+            console.debug("Invalid lease added");
             arLeaseCtl.badLease = true;
         };
     };

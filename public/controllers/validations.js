@@ -4,13 +4,27 @@ var validateUnit = function (unit) {
     unit.unitId = unit.unitId.toUpperCase();
     patt = /^S\d\d$/;
     if (patt.test(unit.unitId) === false) {
+        console.debug("Invalid unitId "+unit.unitID);
         return false;
     };
 
     patt = /^\d+x\d+$/;
-    if (patt.test(unit.size) === false) {
+    if (patt.test(unit.unitType.size) === false) {
+        console.debug("Invalid size "+unit.unitType.size);
         return false;
     };
+    return true;
+};
+
+var validateUnitType = function (unitType) {
+    var patt = "";
+
+    patt = /^\d+x\d+$/;
+    if (patt.test(unitType.size) === false) {
+        console.debug("Invalid size "+unitType.size);
+        return false;
+    };
+
     return true;
 };
 
@@ -20,21 +34,25 @@ var validateTenant = function (tenant) {
     tenant.state = tenant.state.toUpperCase();
     patt = /^[A-Z][A-Z]$/;
     if (patt.test(tenant.state) === false) {
+        console.debug("Invalid tenant state "+tenant.state);
         return false;
     };
 
     patt = /^\d\d\d\d\d$|^\d\d\d\d\d-\d\d\d\d$/;
     if (patt.test(tenant.zip) === false) {
+        console.debug("Invalid tenant zip "+tenant.zip);
         return false;
     };
 
     patt = /^\d\d\d-\d\d\d-\d\d\d\d$|^\(\d\d\d\)\s*\d\d\d-\d\d\d\d$/;
     if (patt.test(tenant.cellPhone) === false) {
+        console.debug("Invalid tenant cell phone "+tenant.cellPhone);
         return false;
     };
 
     patt = /^.*\@.*\..*$/;
     if (patt.test(tenant.email) === false) {
+        console.debug("Invalid tenant eail "+tenant.email);
         return false;
     };
     
