@@ -8,12 +8,15 @@
             <th>Address</th>
             <th>Cell Phone</th>
             <th>EMail</th>
+            <th>Comments</th>
         </tr>
         <tr ng-repeat="tenant in arTenantCtl.tenants | orderBy:'name'">
             <td>{{ tenant.name }}</td>
             <td>{{ tenant.address }}, {{ tenant.city }}, {{ tenant.state }} {{ tenant.zip }}</td>
             <td>{{ tenant.cellPhone }}</td>
             <td>{{ tenant.email }}</td>
+            <td>{{ tenant.comments }}</td>
+            <!-- add unit(s) leased -->
         </tr>
     </table>
 

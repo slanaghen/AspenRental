@@ -1,5 +1,5 @@
 class UnitType {
-    constructor(description, size = "10x10", deposit = 25, rate = 85, 
+    constructor(description, size = "10x10", deposit = 25, rate = 85,
         period = 'month', numPeriods = 12) {
         this.description = description;             // description of this type of unit
         this.size = size;                           // size of this type of unit
@@ -28,13 +28,16 @@ class Unit {
 };
 
 class Payment {
-    constructor(invoice, amt, date) {
+    constructor(invoice, amt, date, method='check', ref='') {
         this.invoice = invoice;                         // invoice this payment was applied to   
         this.amount = amt;                              // amount of payment
         this.date = date;                               // date of payment
+        this.method = method;                           // method of payment (cash, check, credit)
+        this.ref = ref;                                 // payment reference (check #, transaction #, etc)
     };
 };
 
+// TODO: add driversLicense and employer to params and dummy info
 class Tenant {
     constructor(fname, lname, addr, city = "Salida", state = "CO", zip = 81201, phone, email) {
         this.firstName = fname.toLowerCase().capitalize();  // first name of tenant
@@ -45,18 +48,23 @@ class Tenant {
         this.zip = zip;                                     // zip code
         this.cellPhone = phone.formatPhone();               // cell phone number
         this.email = email;                                 // email address
+        // this.driversLicense = driversLicense;               // drivers license
+        // this.employer = employer;                           // employer
+        this.comments = "";                                 // comments   
     };
     get name() {
         return this.firstName + " " + this.lastName;
     };
+    // TODO: add/edit comments
+    // TODO: map to tenant home address
 };
 
 // TODO: handle retired leases...
 class Lease {
-    constructor(unit, tenant, date = Date(), 
-        deposit = unit.unitType.defaultDeposit, 
+    constructor(unit, tenant, date = Date(),
+        deposit = unit.unitType.defaultDeposit,
         rate = unit.unitType.defaultRate,
-        period = unit.unitType.defaultPeriod, 
+        period = unit.unitType.defaultPeriod,
         numPeriods = unit.unitType.defaultNumPeriods) {
         this.unit = unit;               // unit being leased
         this.unit.changeStatus("Occupied");// set the unit's status to occupied with the new lease
@@ -69,7 +77,11 @@ class Lease {
         this.period = period;           // month, quarter or year
         this.numPeriods = numPeriods;   // ie. 12 period for a month period year long lease
         this.status = "Pending";        // Pending, Active or Retired
-        this.invoices = [new Invoice(this, date, this.rate+deposit)];  // list of invoices applied to this lease
+        this.invoices = [new Invoice(this, date, this.rate + deposit)];  // list of invoices applied to this lease
+        this.ref = date.getFullYear().toString().slice(-2)
+            +('0'+date.getMonth()).slice(-2)
+            +('0'+date.getDate()).slice(-2)
+            +'-'+this.unit.unitId;
     };
     // calculate the end date of the lease
     endDate() {
@@ -125,18 +137,27 @@ class Lease {
         return total;
     };
     // calculate the days past due from earliest unpaid invoice
-    earliestUnpaidInvoiceDate() {
+    earliestUnpaidInvoice() {
         for (var i = 0; i < this.invoices.length; i++) {
             if (this.invoices[i].balance() > 0) {
-                return this.invoices[i].dueDate;
+                return this.invoices[i];
             };
         };
+        // all paid up!
+        return null;
+    };
+    // calculate the days past due from earliest unpaid invoice
+    earliestUnpaidInvoiceDate() {
+        var inv = this.earliestUnpaidInvoice();
+        if (inv !== null) {
+            return inv.dueDate;
+        }
         // all paid up!
         return this.nextDueDate();
     };
     paidThru() {
         var d = this.earliestUnpaidInvoiceDate();
-        return new Date(d.getFullYear(), d.getMonth(), d.getDate()-1);
+        return new Date(d.getFullYear(), d.getMonth(), d.getDate() - 1);
     }
     // calculate the days past due from earliest unpaid invoice
     daysPastDue() {
@@ -200,11 +221,15 @@ class Lease {
 };
 
 class Invoice {
-    constructor(lease, date, amount=lease.rate) {
+    constructor(lease, date, amount = lease.rate) {
         this.lease = lease;             // lease to which this invoice applies
         this.amountDue = amount;        // payment amount due
         this.dueDate = date;            // date payment is due
         this.payments = [];             // list of payments applied to this invoice
+        this.ref = date.getFullYear().toString().slice(-2)
+        +('0'+date.getMonth()).slice(-2)
+        +('0'+date.getDate()).slice(-2)
+        +'-'+lease.unit.unitId;
     };
     // returns the balance due on this invoice
     balance() {

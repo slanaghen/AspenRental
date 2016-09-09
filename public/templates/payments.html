@@ -1,15 +1,38 @@
 <div>
 
+    <!--TODO: summarize late/unpaid invoices-->
+   <!-- table of past due invoices -->
+    <table style="width:100%">
+        <h2>Past Due Leases</h2>
+        <tr>
+            <th>Unit</th>
+            <th>Tenant</th>
+            <th>Balance</th>
+            <th>Past Due</th>
+            <th>Invoice</th>
+            <th>Since</th>
+        </tr>
+        <tr ng-repeat="lease in arLeaseCtl.pastDue() | orderBy:'-balance()'">
+            <td>{{ lease.unit.unitId }}</td>
+            <td>{{ lease.tenant }}</td>
+            <td>{{ lease.balance() | currency }}</td>
+            <td>{{ lease.daysPastDue() }} days</td>
+            <td>{{ lease.earliestUnpaidInvoice().ref }}</td>
+            <td>{{ lease.earliestUnpaidInvoiceDate() | date }}</td>
+        </tr>
+    </table>
+
     <!-- lease payment histories -->
     <h2>Payment Histories</h2>
-    <input placeholder="Search Tenant Name" ng-model="arLeaseCtl.pmtFilter.tenant">
     <input placeholder="Search Unit" ng-model="arLeaseCtl.pmtFilter.unit.unitId">
-
+    <input placeholder="Search Tenant Name" ng-model="arLeaseCtl.pmtFilter.tenant">
+    
     <div ng-repeat="lease in arLeaseCtl.leases | orderBy:'unit.unitId' | filter:arLeaseCtl.pmtFilter">
         <table style="width:100%">
             <tr>
                 <th>Unit</th>
                 <th>Tenant</th>
+                <th>Invoice</th>
                 <th>Due Date</th>
                 <th>Charge</th>
                 <th>Pmt Date</th>
@@ -22,29 +45,17 @@
                     <!--<td ng-show="invoice.$index===1">{{ lease.unit.unitId }}</td>-->
                     <td>{{ lease.unit.unitId }}</td>
                     <td>{{ lease.tenant }}</td>
+                    <td>{{ invoice.ref }}</td>
                     <td>{{ invoice.dueDate | date }}</td>
                     <td>{{ invoice.amountDue | currency }}</td>
                     <td>{{ payment.date | date }}</td>
                     <td>{{ payment.amount | currency }}</td>
-                    <!--TODO: How to display balance as of a given date-->
                     <td>{{ lease.balanceAsOf(payment.date) | currency }}</td>
                 </tr>
             </tbody>
         </table>
     </div>
 
-
-    <!--<div ng-repeat="lease in arLeaseCtl.leases | orderBy:'unit.unitId' | filter:arLeaseCtl.pmtFilter">
-        <div ng-repeat="invoice in lease.invoices">
-            <div ng-repeat="payment in invoice.payments">
-                <td>{{ lease.unit.unitId }}</td>
-                <td>{{ lease.tenant }}</td>
-                <td>{{ invoice.dueDate | date }}</td>
-                <td>{{ invoice.amountDue | currency }}</td>
-                <td>{{ payment.date | date }}</td>
-                <td>{{ payment.amount | currency }}</td>
-            </div>
-        </div>
-    </div>-->
-
+    <!-- TODO: add/make payment, include option to send receipt to tenant -->
+    <!-- TODO: add batch payment processing - checkbox next to each lease with anticipated amount -->
 </div>
