@@ -1,7 +1,7 @@
 var dummyUnitTypes = [
-    new UnitType("A 10' x 10' storage unit", "10x10", 85),
-    new UnitType("A 10' x 15' storage unit", "10x15", 100),
-    new UnitType("A 10' x 20' storage unit", "10x20", 120),
+    new UnitType("A 10' x 10' storage unit", "10x10", 25, 85),
+    new UnitType("A 10' x 15' storage unit", "10x15", 25, 100),
+    new UnitType("A 10' x 20' storage unit", "10x20", 25, 120),
 ];
 
 var dummyUnits = [
@@ -25,7 +25,7 @@ var dummyTenants = [
 var dummyLeases = [
     new Lease(dummyUnits[3], "John Doe", new Date(2016, 2, 1)),
     new Lease(dummyUnits[4], "Jane Doe", new Date(2016, 2, 1)),
-    new Lease(dummyUnits[5], "Jill Doe", new Date(2016, 2, 1)),
+    new Lease(dummyUnits[5], "Jill Doe", new Date(2016, 2, 1), 25, 250, 'quarter', 2),
     new Lease(dummyUnits[6], "Joe Blow", new Date(2016, 2, 1)),
 ];
 
@@ -36,7 +36,7 @@ for (var i = 0; i < 4; i++) {
 }
 
 // John Doe is ahead on payments
-dummyLeases[0].makePayment(85, new Date(2016, 2, 2));
+dummyLeases[0].makePayment(110, new Date(2016, 2, 2));
 dummyLeases[0].makePayment(85, new Date(2016, 3, 2));
 dummyLeases[0].makePayment(85, new Date(2016, 4, 2));
 dummyLeases[0].makePayment(85, new Date(2016, 5, 2));
@@ -50,7 +50,7 @@ dummyLeases[0].makePayment(85, new Date(2016, 12, 2));// 13th month!
 dummyLeases[0].makePayment(85, new Date(2016, 13, 2));// 14th month!
 
 // Jane Doe is right on payments
-dummyLeases[1].makePayment(85, new Date(2016, 2, 2));
+dummyLeases[1].makePayment(110, new Date(2016, 2, 2));
 dummyLeases[1].makePayment(85, new Date(2016, 3, 2));
 dummyLeases[1].makePayment(85, new Date(2016, 4, 2));
 dummyLeases[1].makePayment(85, new Date(2016, 5, 2));
@@ -59,14 +59,14 @@ dummyLeases[1].makePayment(85, new Date(2016, 7, 2));
 dummyLeases[1].makePayment(85, new Date(2016, 8, 2));
 
 // Jill is behind on payments
-dummyLeases[2].makePayment(85, new Date(2016, 2, 2));
+dummyLeases[2].makePayment(110, new Date(2016, 2, 2));
 dummyLeases[2].makePayment(85, new Date(2016, 3, 2));
 dummyLeases[2].makePayment(85, new Date(2016, 4, 2));
 dummyLeases[2].makePayment(85, new Date(2016, 5, 2));
 dummyLeases[2].makePayment(85, new Date(2016, 6, 2));
 
 // Joe is varied, but on schedule with payments
-dummyLeases[3].makePayment(75, new Date(2016, 2, 2));
+dummyLeases[3].makePayment(100, new Date(2016, 2, 2));
 dummyLeases[3].makePayment(150, new Date(2016, 3, 2));
 dummyLeases[3].makePayment(100, new Date(2016, 4, 2));
 dummyLeases[3].makePayment(85, new Date(2016, 5, 2));

@@ -14,7 +14,7 @@
                 <th>Charge</th>
                 <th>Pmt Date</th>
                 <th>Payment</th>
-                <!--<th>Balance</th>-->
+                <th>Balance</th>
             </tr>
             <tbody ng-repeat="invoice in lease.invoices">
                 <tr ng-repeat="payment in invoice.payments">
@@ -27,7 +27,7 @@
                     <td>{{ payment.date | date }}</td>
                     <td>{{ payment.amount | currency }}</td>
                     <!--TODO: How to display balance as of a given date-->
-                    <!--<td>{{ lease.balanceAsOf(payment.date) | currency }}</td>-->
+                    <td>{{ lease.balanceAsOf(payment.date) | currency }}</td>
                 </tr>
             </tbody>
         </table>
