@@ -12,24 +12,22 @@
         <tr ng-repeat="unitType in arUnitCtl.unitTypes | orderBy:'size' ">
             <td>{{ unitType.size }}</td>
             <td>{{ unitType.description }}</td>
-            <td>{{ unitType.defaultRate  | currency}} {{ unitType.defaultPeriod }}</td>
+            <td>{{ unitType.defaultRate  | currency}}/{{ unitType.defaultPeriod }}</td>
             <td>{{ unitType.statusCount['Available'] }} / {{ unitType.count }}</td>
         </tr>
     </table>
 
-    <!-- table of units -->
+    <!-- table of unit types -->
     <table style="width:100%">
         <h2>Units</h2>
         <tr>
             <th>Unit</th>
             <th>Size</th>
-            <th>Rate</th>
             <th>Status</th>
         </tr>
         <tr ng-repeat="unit in arUnitCtl.units | orderBy:'unitId' ">
             <td>{{ unit.unitId }}</td>
             <td>{{ unit.unitType.size }}</td>
-            <td>{{ unit.unitType.defaultRate  | currency}}</td>
             <td>{{ unit.status }}</td>
         </tr>
     </table>

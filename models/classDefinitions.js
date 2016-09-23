@@ -28,7 +28,7 @@ class Unit {
 };
 
 class Payment {
-    constructor(invoice, amt, date, method='check', ref='') {
+    constructor(invoice, amt, date, method = 'check', ref = '') {
         this.invoice = invoice;                         // invoice this payment was applied to   
         this.amount = amt;                              // amount of payment
         this.date = date;                               // date of payment
@@ -79,9 +79,9 @@ class Lease {
         this.status = "Pending";        // Pending, Active or Retired
         this.invoices = [new Invoice(this, date, this.rate + deposit)];  // list of invoices applied to this lease
         this.ref = date.getFullYear().toString().slice(-2)
-            +('0'+date.getMonth()).slice(-2)
-            +('0'+date.getDate()).slice(-2)
-            +'-'+this.unit.unitId;
+            + ('0' + date.getMonth()).slice(-2)
+            + ('0' + date.getDate()).slice(-2)
+            + '-' + this.unit.unitId;
     };
     // calculate the end date of the lease
     endDate() {
@@ -227,9 +227,9 @@ class Invoice {
         this.dueDate = date;            // date payment is due
         this.payments = [];             // list of payments applied to this invoice
         this.ref = date.getFullYear().toString().slice(-2)
-        +('0'+date.getMonth()).slice(-2)
-        +('0'+date.getDate()).slice(-2)
-        +'-'+lease.unit.unitId;
+            + ('0' + date.getMonth()).slice(-2)
+            + ('0' + date.getDate()).slice(-2)
+            + '-' + lease.unit.unitId;
     };
     // returns the balance due on this invoice
     balance() {
