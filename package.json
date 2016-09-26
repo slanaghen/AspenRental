@@ -1,0 +1,26 @@
+{
+  "name": "aspenrental",
+  "version": "1.0.0",
+  "description": "A website for tracking rental unit bookkeeping, including availability, invoices and payments.",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/slanaghen/AspenRental.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/slanaghen/AspenRental/issues"
+  },
+  "homepage": "https://github.com/slanaghen/AspenRental#readme",
+  "dependencies": {
+    "body-parser": "^1.15.2",
+    "express": "^4.14.0",
+    "mongoose": "^4.6.1",
+    "morgan": "^1.7.0"
+  }
+}

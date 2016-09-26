@@ -3,6 +3,7 @@ var express = require('express'),
     bodyParser = require('body-parser'),
     // logger = require('morgan'), // logging only for debugging.
     mongoose = require('mongoose'),
+    // SGL: WHy is this relative to ./public instead of . ?
     routes = require('./controllers/routes');
 
 // set port to 8080 by default, unless overridden by environment
@@ -26,11 +27,11 @@ mongoose.connect('mongodb://localhost/'+DBName, (error) => {
 // we will use parsed req.body to determine parameterized angular routes 
 app.post('*', bodyParser.json(), bodyParser.urlencoded({extended:true}));
 
-// set the server-side routes from the exported Routes
-routes(app);
-
 // include static routes for serving up static html files.
 app.use(express.static('public'));
+
+// set the client-side routes from the exported angular routes
+routes(app);
 
 // start express listening for requests
 app.listen(PORT, (err) => {

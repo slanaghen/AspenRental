@@ -1,4 +1,4 @@
-var aspenCtrl = require('./apiRoutes');
+var apiRoutes = require('./apiRoutes');
 
 module.exports = function(app) {
 
@@ -14,15 +14,16 @@ module.exports = function(app) {
 
     // middleware for api paths to verify a valid session key
     function checkKeyMiddleware( req, res, next ) {
-        console.log("Checking for key: ", req.query.key);
-        if( req.query.key ) {
-            next();
-        } else {
-            console.log("You are blocked");
-            // TODO: create session key for secure requests and block invalid requests here
-            // res.send("You are blocked");
-            next();
-        };
+        console.debug("Received:",req);
+        // console.log("Checking for key: ", req.query.key);
+        // if( req.query.key ) {
+        //     next();
+        // } else {
+        //     console.log("You are blocked");
+        //     // TODO: create session key for secure requests and block invalid requests here
+        //     // res.send("You are blocked");
+        //     next();
+        // };
     };
 
     // api routes for aspen
@@ -35,6 +36,6 @@ module.exports = function(app) {
     // /api/lease
     // /api/invoice
     // /api/payment
-    app.get('/api/*', checkKeyMiddleware, aspenCtrl.get);
-    app.post('/api/*', checkKeyMiddleware, aspenCtrl.upsert);
+    app.get('/api/*', checkKeyMiddleware, apiRoutes.get);
+    app.post('/api/*', checkKeyMiddleware, apiRoutes.upsert);
 };

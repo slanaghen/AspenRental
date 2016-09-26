@@ -8,8 +8,6 @@ Router.$inject = ['$routeProvider'];
 
 // $routeProvider comes from the ngRoute module
 function Router($routeProvider) {
-    // If a user tries to go to a page that doesn't exist, take them back to the home page
-    $routeProvider.otherwise({ redirectTo: '/index.html' });
     // This is where we define our routes
     $routeProvider
         .when('/home/', {
@@ -31,6 +29,9 @@ function Router($routeProvider) {
         .when('/unit/', {
             templateUrl: '/templates/unit.html',
             controller: 'ARUnitController as arUnitCtl'
+        })
+        // If a user tries to go to a page that doesn't exist, take them back to the home page
+            .otherwise({ redirectTo: '/index.html'
         });
 };
 // TODO: Custom directive template, to insert payment row element

@@ -2,18 +2,45 @@
 angular.module('AspenRental')
     .controller('ARLeaseController', arLeaseController);
 
-function arLeaseController() {
+arLeaseController.$inject = ['$http'];
+
+// function homeController ($http) {
+// 	var hCtrl = this;
+// 	hCtrl.newBook = {};
+// 	hCtrl.createBook = function() {
+// 		$http.post('/library/createbook', hCtrl.newBook)
+// 	};
+// };
+
+function arLeaseController($http) {
     console.debug('ARLeaseController loaded');
     var arLeaseCtl = this;
 
-    // load leases
-    // TODO: Filter for only active leases
-    arLeaseCtl.leases = JSON.parse(localStorage.getItem('leases')) || dummyLeases;
+    // validate lease properties
+    var validateLease = function (lease) {
+        return true;
+    };
+
+    arLeaseCtl.leases = [];
+    arLeaseCtl.newLease = {};
+
+    arLeaseCtl.getLeases = function () {
+        // load leases
+        // TODO: Filter for only active leases
+        // arLeaseCtl.leases = JSON.parse(localStorage.getItem('leases')) || dummyLeases;
+        console.debug('getting leases', arLeaseCtl.leases);
+        // TODO: add key for api
+        arLeaseCtl.leases = $http.get('/api/lease');
+        console.debug('got leases', arLeaseCtl.leases);
+        return arLeaseCtl.leases;
+    }
 
     // add a new lease
     // TODO: add validation
     arLeaseCtl.addLease = function () {
         if (validateLease(arLeaseCtl.newLease)) {
+            // TODO: add key for api
+            $http.post('/api/lease', arLeaseCtl.newLease);
             arLeaseCtl.leases.push(arLeaseCtl.newLease);
             arLeaseCtl.newLease.unit.available = false;
             arLeaseCtl.newLease = {};
@@ -28,6 +55,7 @@ function arLeaseController() {
 
     // identify all past due leases
     arLeaseCtl.pastDue = function () {
+        console.debug("getting past due leases"); 
         var pastDueLeases = [];
         for (var i = 0; i < arLeaseCtl.leases.length; i++) {
             // if there is a balance on any past invoices, add to the list
@@ -38,7 +66,7 @@ function arLeaseController() {
         };
         return pastDueLeases;
     };
-    
+
     // create invoices for all current leases
     arLeaseCtl.invoiceAll = function () {
         console.debug("Invoicing all leases");

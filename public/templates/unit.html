@@ -45,12 +45,14 @@
     <!-- form for creation of a new unit type -->
     <h2>Add Unit Type</h2>
     <form ng-submit="arUnitCtl.addUnitType()">
+        <input placeholder="Name " type="text" ng-model="arUnitCtl.newUnitType.name" />
         <input placeholder="Size " type="text" ng-model="arUnitCtl.newUnitType.size" />
         <input placeholder="Description" type="text" ng-model="arUnitCtl.newUnitType.description" />
         <input placeholder="Default Rate" type="number" ng-model="arUnitCtl.newUnitType.defaultRate" />
+        <input placeholder="Default Deposit" type="number" ng-model="arUnitCtl.newUnitType.defaultDeposit" />
         <input placeholder="Default Period" type="text" ng-model="arUnitCtl.newUnitType.defaultPeriod" />
         <input placeholder="Default Num Periods" type="number" ng-model="arUnitCtl.newUnitTYpe.defaultNumPeriods" />
-        <button type="submit">Add Unit</button>
+        <button type="submit">Add Unit Type</button>
     </form>    
 
 </div>

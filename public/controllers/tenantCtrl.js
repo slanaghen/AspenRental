@@ -2,17 +2,59 @@
 angular.module('AspenRental')
     .controller('ARTenantController', arTenantController);
 
-function arTenantController() {
+arTenantController.$inject = ['$http'];
+
+// validate tenant properties
+var validateTenant = function (tenant) {
+    var patt = "";
+
+    tenant.state = tenant.state.toUpperCase();
+    patt = /^[A-Z][A-Z]$/;
+    if (patt.test(tenant.state) === false) {
+        console.debug("Invalid tenant state " + tenant.state);
+        return false;
+    };
+
+    patt = /^\d\d\d\d\d$|^\d\d\d\d\d-\d\d\d\d$/;
+    if (patt.test(tenant.zip) === false) {
+        console.debug("Invalid tenant zip " + tenant.zip);
+        return false;
+    };
+
+    patt = /^\d\d\d-\d\d\d-\d\d\d\d$|^\(\d\d\d\)\s*\d\d\d-\d\d\d\d$/;
+    if (patt.test(tenant.cellPhone) === false) {
+        console.debug("Invalid tenant cell phone " + tenant.cellPhone);
+        return false;
+    };
+
+    patt = /^.*\@.*\..*$/;
+    if (patt.test(tenant.email) === false) {
+        console.debug("Invalid tenant eail " + tenant.email);
+        return false;
+    };
+    return true;
+};
+
+function arTenantController($http) {
     console.debug('ARTenantController loaded');
     var arTenantCtl = this;
 
-    // load customers
-    arTenantCtl.tenants = JSON.parse(localStorage.getItem('tenants')) || dummyTenants;
+    arTenantCtl.tenants = [];
+    arTenantCtl.newTenant = {};
+
+    arTenantCtl.getTenants = function () {
+        console.debug('getting tenants', arTenantCtl.tenants);
+        // TODO: add key for api
+        arTenantCtl.tenants = $http.get('/api/tenant');
+        console.debug('got tenants', arTenantCtl.tenants);
+        return arTenantCtl.tenants;
+    }
 
     // add a new customer
     arTenantCtl.addTenant = function () {
         if (validateTenant(arTenantCtl.newTenant)) {
             arTenantCtl.tenants.push(arTenantCtl.newTenant);
+            $http.post('/api/tenant', arUnitCtl.newTenant);
             arTenantCtl.newTenant = {};
             console.debug("Valid tenant added");
             arTenantCtl.badTenant = false;
@@ -22,11 +64,12 @@ function arTenantController() {
             arTenantCtl.badTenant = true;
         };
     };
-    
+
     // update customer info
     // TODO: add validation
     arTenantCtl.editTenant = function (tenant) {
         arTenantCtl.editTenant = {};
-        // localStorage.setItem('tenants', JSON.stringify(arCtrlr.tenants));
+        // TODO:
+        $http.put('/api/tenant', arUnitCtl.editTenant);
     };
 };

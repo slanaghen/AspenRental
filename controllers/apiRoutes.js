@@ -1,46 +1,50 @@
 // Aspen controller
 // require all of the mongoose schema models to be used
 var unitType = require("../models/unitTypeModel"),
-    unit =     require("../models/unitModel"),
-    tenant =   require("../models/tenantModel"),
-    lease =    require("../models/leaseModel"), 
-    invoice =  require("../models/invoiceModel"),
-    payment =  require("../models/paymentModel");
+    unit = require("../models/unitModel"),
+    tenant = require("../models/tenantModel"),
+    lease = require("../models/leaseModel"),
+    invoice = require("../models/invoiceModel"),
+    payment = require("../models/paymentModel");
+
+// a simple responder to send json response to request
+var respond = function (err, item) {
+    if (err) {
+        return res.json(err);
+    } else {
+        res.json(item);
+    };
+};
 
 module.exports = {
 
     // GET::/api/:item?id=xxx
     get: (req, res) => {
+        console.debug("GET::", req);
         if (req.params.item) {
             var item = req.params.item; // item is unitType, unit, tenant, lease, invoice or payment
             var id = req.query.id; // id is optionally specified in request
 
-            // a simple responder to send json response to request
-            var respond = function(err, item) {
-                    if (err) {
-                        return res.json(err);
-                    } else {
-                        res.json(item);
-                    };
-                };
             // if an id is specified, return the specified item
             if (id) {
+                console.debug("GET::", item, id);
                 if (item === "unitType") {
-                    UnitType.find({name:id}, respond);
+                    UnitType.find({ name: id }, respond);
                 } else if (item === "unit") {
-                    Unit.find({name:id}, respond);
+                    Unit.find({ name: id }, respond);
                 } else if (item === "tenant") {
-                    Tenant.find({name:id}, respond);
+                    Tenant.find({ name: id }, respond);
                 } else if (item === "lease") {
-                    Lease.find({name:id}, respond);
+                    Lease.find({ name: id }, respond);
                 } else if (item === "invoice") {
-                    Invoice.find({name:id}, respond);
+                    Invoice.find({ name: id }, respond);
                 } else if (item === "payment") {
-                    Payment.find({name:id}, respond);
+                    Payment.find({ name: id }, respond);
                 }
 
-            // if no id is specifed, return all of the specified items
+                // if no id is specifed, return all of the specified items
             } else {
+                console.debug("GET::", item , "list");
                 if (item === "unitType") {
                     UnitType.find({}, respond);
                 } else if (item === "unit") {
@@ -56,9 +60,10 @@ module.exports = {
                 }
 
             }
-        //GET:: /api/ - no item specified...    
+            //GET:: /api/ - no item specified...    
         } else {
             // send the user back home to try again.
+                console.debug("GET::(unknown item) - redirect");
             res.redirect('/');
         }
     },
@@ -66,19 +71,14 @@ module.exports = {
     // POST::/api/:item
     upsert: (req, res) => {
         if (req.params.item) {
+
+            console.debug("POST::", item + 's');
             var item = req.body; // item is unit, tenant, invoice or payment (or array of one type)
-            
-            // a simple responder to send json response to request
-            var respond = function(err, item) {
-                    if (err) {
-                        return res.json(err);
-                    } else {
-                        res.json(item);
-                    };
-                };
+
 
             // if this is a bulk insert...
             if (item.length >= 1) {
+                console.debug("POST::",item,"list");
                 var newItem;
                 if (item === "unitType") {
                     UnitType.insertMany(item, respond);
@@ -94,8 +94,9 @@ module.exports = {
                     Payment.insertMany(item, respond);
                 };
 
-            // if this is an insert of a single item
+                // if this is an insert of a single item
             } else {
+                console.debug("POST::",item);
                 var newItem;
                 if (item === "unitType") {
                     newItem = new UnitType(req.body);
@@ -113,8 +114,9 @@ module.exports = {
                 // save the new item to the database
                 newItem.save(respond);
             };
-        //POST:: /api/ - no item specified...    
+            //POST:: /api/ - no item specified...    
         } else {
+                console.log("POST::(unknown item) - redirect");
             // send the user back home to try again.
             res.redirect('/');
         };
