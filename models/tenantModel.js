@@ -1,7 +1,7 @@
 var mongoose = require('mongoose');
 
 var tenantSchema = mongoose.Schema({
-    "name":             {type:String, required:true},       // LANA-01
+    "name":             {type:String, required:true, index: { unique: true }},       // LANA-01
     "firstName":        {type:String, required:true},
     "lastName":         {type:String, required:true},
     "address":          {type:String, required:true},

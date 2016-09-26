@@ -10,8 +10,8 @@
             <th>EMail</th>
             <th>Comments</th>
         </tr>
-        <tr ng-repeat="tenant in arTenantCtl.tenants | orderBy:'name'">
-            <td>{{ tenant.name }}</td>
+        <tr ng-repeat="tenant in arTenantCtl.tenants  | orderBy:'name'">
+            <td>{{ tenant.firstName }} {{ tenant.lastName }} ({{ tenant.name }})</td>
             <td>{{ tenant.address }}, {{ tenant.city }}, {{ tenant.state }} {{ tenant.zip }}</td>
             <td>{{ tenant.cellPhone }}</td>
             <td>{{ tenant.email }}</td>

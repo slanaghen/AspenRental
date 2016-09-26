@@ -1,7 +1,7 @@
 var mongoose = require('mongoose');
 
 var invoiceSchema = mongoose.Schema({
-    "name":             {type:String, required:true},   // I160101-S99
+    "name":             {type:String, required:true, index: { unique: true }},   // I160101-S99
     "leaseId":          {type:String, required:true},   // L160101-S99
     "amountDue":        {type:Number, required:true},
     "dueDate":          {type:Date, required:true},

@@ -1,5 +1,7 @@
 <div>
 
+    <button ng-click="unitTypes.getUnitTypes()">UnitTypes!</button>
+
     <!-- table of unit types -->
     <table style="width:100%">
         <h2>Unit Types</h2>
@@ -25,8 +27,8 @@
             <th>Size</th>
             <th>Status</th>
         </tr>
-        <tr ng-repeat="unit in arUnitCtl.units | orderBy:'unitId' ">
-            <td>{{ unit.unitId }}</td>
+        <tr ng-repeat="unit in arUnitCtl.units | orderBy:'name' ">
+            <td>{{ unit.name }}</td>
             <td>{{ unit.unitType.size }}</td>
             <td>{{ unit.status }}</td>
         </tr>
@@ -35,9 +37,9 @@
     <!-- form for creation of a new unit -->
     <h2>Add Unit</h2>
     <form ng-submit="arUnitCtl.addUnit()">
-        <input placeholder="Unit" type="text" ng-model="arUnitCtl.newUnit.unitId" required="" />
+        <input placeholder="Unit" type="text" ng-model="arUnitCtl.newUnit.name" required="" />
         <!--TODO: This doesn't work.  Need to find unitType by given size-->
-        <input placeholder="Type " type="text" ng-model="arUnitCtl.newUnit.unitType.unit" />
+        <input placeholder="Type " type="text" ng-model="arUnitCtl.newUnit.unitType" />
         <input placeholder="Status" type="text" ng-model="arUnitCtl.newUnit.status" />
         <button type="submit">Add Unit</button>
     </form>

@@ -9,29 +9,29 @@ var validateTenant = function (tenant) {
     var patt = "";
 
     tenant.state = tenant.state.toUpperCase();
-    patt = /^[A-Z][A-Z]$/;
-    if (patt.test(tenant.state) === false) {
-        console.debug("Invalid tenant state " + tenant.state);
-        return false;
-    };
+    // patt = /^[A-Z][A-Z]$/;
+    // if (patt.test(tenant.state) === false) {
+    //     console.debug("Invalid tenant state " + tenant.state);
+    //     return false;
+    // };
 
-    patt = /^\d\d\d\d\d$|^\d\d\d\d\d-\d\d\d\d$/;
-    if (patt.test(tenant.zip) === false) {
-        console.debug("Invalid tenant zip " + tenant.zip);
-        return false;
-    };
+    // patt = /^\d\d\d\d\d$|^\d\d\d\d\d-\d\d\d\d$/;
+    // if (patt.test(tenant.zip) === false) {
+    //     console.debug("Invalid tenant zip " + tenant.zip);
+    //     return false;
+    // };
 
-    patt = /^\d\d\d-\d\d\d-\d\d\d\d$|^\(\d\d\d\)\s*\d\d\d-\d\d\d\d$/;
-    if (patt.test(tenant.cellPhone) === false) {
-        console.debug("Invalid tenant cell phone " + tenant.cellPhone);
-        return false;
-    };
+    // patt = /^\d\d\d-\d\d\d-\d\d\d\d$|^\(\d\d\d\)\s*\d\d\d-\d\d\d\d$/;
+    // if (patt.test(tenant.cellPhone) === false) {
+    //     console.debug("Invalid tenant cell phone " + tenant.cellPhone);
+    //     return false;
+    // };
 
-    patt = /^.*\@.*\..*$/;
-    if (patt.test(tenant.email) === false) {
-        console.debug("Invalid tenant eail " + tenant.email);
-        return false;
-    };
+    // patt = /^.*\@.*\..*$/;
+    // if (patt.test(tenant.email) === false) {
+    //     console.debug("Invalid tenant eail " + tenant.email);
+    //     return false;
+    // };
     return true;
 };
 
@@ -45,7 +45,14 @@ function arTenantController($http) {
     arTenantCtl.getTenants = function () {
         console.debug('getting tenants', arTenantCtl.tenants);
         // TODO: add key for api
-        arTenantCtl.tenants = $http.get('/api/tenant');
+        $http.get('/api/tenant')
+            .then(function (res) {
+                console.log("Received: Get /api/tenant", res.data);
+                arTenantCtl.tenants = res.data;
+            },function (error, status) {
+                err = { message: error, status: status };
+                console.log("ERROR /api/tenant: ",err.status);
+            });
         console.debug('got tenants', arTenantCtl.tenants);
         return arTenantCtl.tenants;
     }
@@ -54,13 +61,19 @@ function arTenantController($http) {
     arTenantCtl.addTenant = function () {
         if (validateTenant(arTenantCtl.newTenant)) {
             arTenantCtl.tenants.push(arTenantCtl.newTenant);
-            $http.post('/api/tenant', arUnitCtl.newTenant);
+            $http.post('/api/tenant', arTenantCtl.newTenant)
+                .then(function (res) {
+                    console.log("Received: Post /api/tenant", res.data);
+                    arTenantCtl.tenants.push(res.data);
+                },function (error, status) {
+                    err = { message: error, status: status };
+                    console.log("ERROR /api/tenant: ",err.status);
+                });
             arTenantCtl.newTenant = {};
             console.debug("Valid tenant added");
             arTenantCtl.badTenant = false;
-            // localStorage.setItem('tenants', JSON.stringify(arCtrlr.tenants));
         } else {
-            console.debug("Invalid tenant added");
+            console.debug("Invalid tenant NOT added");
             arTenantCtl.badTenant = true;
         };
     };
@@ -70,6 +83,15 @@ function arTenantController($http) {
     arTenantCtl.editTenant = function (tenant) {
         arTenantCtl.editTenant = {};
         // TODO:
-        $http.put('/api/tenant', arUnitCtl.editTenant);
+        $http.put('/api/tenant', arTenantCtl.editTenant)
+                .then(function (res) {
+                    console.log("ERROR: Put /api/tenant", res.data);
+                    arTenantCtl.tenants.push(res.data);
+                },function (error, status) {
+                    err = { message: error, status: status };
+                    console.log(err.status);
+                });
     };
+
+    arTenantCtl.getTenants();
 };

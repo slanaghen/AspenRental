@@ -13,6 +13,7 @@ module.exports = function(app) {
         console.log("Public Home Route");
         res.sendFile('index-public.html', { root: './public' });
     });
+    
 
     // middleware for api paths to verify a valid session key
     function checkKeyMiddleware( req, res, next ) {

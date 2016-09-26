@@ -1,7 +1,7 @@
 var mongoose = require('mongoose');
 
 var unitSchema = mongoose.Schema({
-    "name":             {type:String, required:true},           // S99
+    "name":             {type:String, required:true, index: { unique: true }},           // S99
     "unitType":         {type:String, required:true},
     "status":           {type:String, required:true, default:'Available'},
 });

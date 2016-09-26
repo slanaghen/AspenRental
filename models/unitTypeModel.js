@@ -1,7 +1,7 @@
 var mongoose = require('mongoose');
 
 var unitTypeSchema = mongoose.Schema({
-    "name":             {type:String, required:true},               // S10x10
+    "name":             {type:String, required:true, index: { unique: true }},   // S10x10
     "description":      {type:String, required:true},
     "size":             {type:String, required:true, default:'10x10'},
     "defaultDeposit":   {type:Number, required:true, default:25},
