@@ -54,7 +54,11 @@ function arUnitController($http) {
     arUnitCtl.getUnitTypes = function () {
         console.debug('getting unitTypes', arUnitCtl.unitTypes);
         // TODO: add key for api
-        arUnitCtl.unitTypes = $http.get('/api/unitType');
+        arUnitCtl.unitTypes = $http.get('/api/unitType')
+        .then(function (res) {
+            console.log(res.data);
+            arUnitCtl.units = res.data;
+        });
         console.debug('got unitTypes', arUnitCtl.unitTypes);
         return arUnitCtl.unitTypes;
     };
@@ -62,7 +66,11 @@ function arUnitController($http) {
     arUnitCtl.getUnits = function () {
         console.debug('getting units', arUnitCtl.units);
         // TODO: add key for api
-        arUnitCtl.units = $http.get('/api/unit');
+        arUnitCtl.units = $http.get('/api/unit')
+        .then(function (res) {
+            console.log(res.data);
+            arUnitCtl.units = res.data;
+        });
         console.debug('got units', arUnitCtl.units);
         return arUnitCtl.units;
     };
@@ -103,10 +111,10 @@ function arUnitController($http) {
             //     status:arUnitCtl.newUnit.name
             // })
             $http.post('/api/unit', arUnitCtl.newUnit)
-            .then(function (res) {
-                console.log(res.data);
-                arUnitCtl.unitTypes.push(res.data);
-            });
+                .then(function (res) {
+                    console.log(res.data);
+                    arUnitCtl.unitTypes.push(res.data);
+                });
             arUnitCtl.newUnit = {};
             console.debug("Valid unit added");
             arUnitCtl.badUnit = false;
@@ -130,10 +138,10 @@ function arUnitController($http) {
         // );
         if (validateUnitType(arUnitCtl.newUnitType)) {
             $http.post('/api/unitType', arUnitCtl.newUnitType)
-            .then(function (res) {
-                console.log(res.data);
-                arUnitCtl.unitTypes.push(res.data);
-            });
+                .then(function (res) {
+                    console.log("ERROR: Post /api/unitType", res.data);
+                    arUnitCtl.unitTypes.push(res.data);
+                });
             arUnitCtl.newUnitType = {};
             console.debug("Valid unitType added");
             arUnitCtl.badUnit = false;
