@@ -39,15 +39,43 @@ function arUnitController($http) {
     console.debug('ARUnitController loaded');
     var arUnitCtl = this;
 
-    // load units
+    var presaveUnit = function (unit, type, status = 'Available') {
+        unit.unitId = unit.toUpperCase();               // unit identifier
+        unit.unitType = type;                           // type of unit (10x10 storage, 1BR residence, etc)
+        unit.status = status.toLowerCase().capitalize();// status of this unit available/occupied/unrentable
+        unit.unitType.count++;
+        unit.unitType.statusCount[unit.status]++;
+    };
+
+    var presaveUnitType = function(unitType, description, size = "10x10", deposit = 25, rate = 85,
+        period = 'month', numPeriods = 12) {
+        unitType.description = description;             // description of this type of unit
+        unitType.size = size;                           // size of this type of unit
+        unitType.defaultDeposit = deposit;              // default rental deposit for this type of unit
+        unitType.defaultRate = rate;                    // default rental rate for this type of unit
+        unitType.defaultPeriod = period.toLowerCase();  // default period for this type of unit (ie. month/quarter/year)
+        unitType.defaultNumPeriods = numPeriods;        // default number of periods for this type of unit (ie. 12 for month period year long lease)
+        unitType.count = 0;
+        unitType.statusCount = { 'Available': 0, 'Occupied': 0, 'LockedOut': 0, 'Unrentable': 0 };
+    };
+
+    var changeStatus = function(unit, to) {
+        unit.unitType.statusCount[unit.status]--;
+        unit.status = to.toLowerCase().capitalize();
+        unit.unitType.statusCount[unit.status]++;
+    }
+
+    // initialize ng models
     arUnitCtl.units = [];
     arUnitCtl.unitTypes = [];
+    arUnitCtl.availableUnitTypes = [];
 
     arUnitCtl.newUnit = {};
     arUnitCtl.newUnitType = {};
     arUnitCtl.newUnit = {};
     arUnitCtl.newUnitType = {};
 
+    // get all unitTypes from database
     arUnitCtl.getUnitTypes = function () {
         console.debug('getting unitTypes', arUnitCtl.unitTypes);
         // TODO: add key for api
@@ -59,6 +87,7 @@ function arUnitController($http) {
             });
     };
 
+    // get all units from database
     arUnitCtl.getUnits = function () {
         console.debug('getting units', arUnitCtl.units);
         // TODO: add key for api
@@ -81,17 +110,17 @@ function arUnitController($http) {
     //     return cnt;
     // };
 
+    // get all unitTypes that have 1 or more that are available
     arUnitCtl.getAvailableUnitTypes = function () {
-        var unitTypes = [];
         console.debug("get available unitTypes");
         for (var i = 0; i < arUnitCtl.units.length; i++) {
             if (arUnitCtl.units[i].status === 'Available') {
-                if (unitTypes.indexof(arUnitCtl.units[i], unitType) === -1) {
-                    unitTypes.push(arUnitCtl.units[i].unitType);
+                if (arUnitCtl.availableUnitTypes.indexof(arUnitCtl.units[i], unitType) === -1) {
+                    arUnitCtl.availableUnitTypes.push(arUnitCtl.units[i].unitType);
                 }
             }
         }
-        return unitTypes;
+        return arUnitCtl.availableUnitTypes;
     };
 
     // add a new unit
@@ -139,8 +168,9 @@ function arUnitController($http) {
         };
     };
 
-    // initially populate unit lists
+    // initially populate unit and unitTypelists
     arUnitCtl.getUnitTypes();
     arUnitCtl.getUnits();
+    arUnitCtl.getAvailableUnitTypes();
 };
 

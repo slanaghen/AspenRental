@@ -42,6 +42,24 @@ function arTenantController($http) {
     arTenantCtl.tenants = [];
     arTenantCtl.newTenant = {};
 
+    var presaveTenant = function (tenant,fname, lname, addr, city = "Salida", state = "CO", zip = 81201, phone, email) {
+        tenant.firstName = fname.toLowerCase().capitalize();  // first name of tenant
+        tenant.lastName = lname.toLowerCase().capitalize();   // last name of tenant
+        tenant.address = addr;                                // street addresss
+        tenant.city = city.toLowerCase().capitalize();        // city
+        tenant.state = state.toUpperCase();                   // state
+        tenant.zip = zip;                                     // zip code
+        tenant.cellPhone = phone.formatPhone();               // cell phone number
+        tenant.email = email;                                 // email address
+        // this.driversLicense = driversLicense;               // drivers license
+        // this.employer = employer;                           // employer
+        tenant.comments = "";                                 // comments   
+    };
+
+    var getName = function(tenant) {
+        return tenant.firstName + " " + tenant.lastName;
+    };
+
     arTenantCtl.getTenants = function () {
         console.debug('getting tenants', arTenantCtl.tenants);
         // TODO: add key for api

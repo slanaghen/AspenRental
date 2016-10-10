@@ -21,6 +21,51 @@ function arLeaseController($http) {
         return true;
     };
 
+    var presaveLease = function(lease, unit, tenant, date = Date(),
+        deposit = unit.unitType.defaultDeposit,
+        rate = unit.unitType.defaultRate,
+        period = unit.unitType.defaultPeriod,
+        numPeriods = unit.unitType.defaultNumPeriods) {
+        lease.unit = unit;               // unit being leased
+        lease.unit.changeStatus("Occupied");// set the unit's status to occupied with the new lease
+        // TODO find a way to make this private/hidden
+        // this.unit.status = "Occupied";  // set the unit's status to occupied with the new lease
+        lease.tenant = tenant;           // tenant's full name
+        lease.originalDate = date;       // date lease is signed
+        lease.deposit = deposit;
+        lease.rate = rate;               // periodic (month/quarter/year) rent
+        lease.period = period;           // month, quarter or year
+        lease.numPeriods = numPeriods;   // ie. 12 period for a month period year long lease
+        lease.status = "Pending";        // Pending, Active or Retired
+        lease.invoices = [new Invoice(lease, date, lease.rate + deposit)];  // list of invoices applied to this lease
+        lease.ref = date.getFullYear().toString().slice(-2)
+            + ('0' + date.getMonth()).slice(-2)
+            + ('0' + date.getDate()).slice(-2)
+            + '-' + lease.unit.unitId;
+    };
+        
+    // calculate the end date of the lease
+    var endDate = function (lease) {
+        var startDate = lease.originalDate;
+        var endDate = null;
+        if (lease.period === 'month') {
+            return new Date(startDate.getFullYear(),
+                startDate.getMonth() + lease.numPeriods,
+                startDate.getDate() - 1);
+        } else if (lease.period === 'quarter') {
+            return new Date(startDate.getFullYear(),
+                startDate.getMonth() + (lease.numPeriods * 3),
+                startDate.getDate() - 1);
+        } else if (lease.period === 'year') {
+            return new Date(startDate.getFullYear() + lease.numPeriods,
+                startDate.getMonth(),
+                startDate.getDate() - 1);
+        }
+        console.error("Bad period " + lease.period + " for lease on " +
+            lease.unit.unitId + " detected in endDate().");
+        return null;
+    }
+
     // calculate the balance due on this lease
     var balance = function (lease) {
         var total = 0;
@@ -98,6 +143,82 @@ function arLeaseController($http) {
             lease.unit.unitId + " detected in NextDueDate.");
         return null;
     };
+
+    // enter a payment for the given lease
+    var makePayment = function(lease, amount, date) {
+        lease.status = "Active";
+        console.debug("Making payment of $" + amount + " for unit " +
+            lease.unit.unitId + " on " + date.toDateString());
+        // apply payment to earliest invoice with an unpaid balance
+        for (var i = 0; i < lease.invoices.length; i++) {
+            if (lease.invoices[i].balance() > 0) {
+                console.debug("Applying payment of $" + amount + " for unit " +
+                    lease.unit.unitId + " to invoice #" + i + " on " +
+                    date.toDateString());
+                amount = lease.invoices[i].applyPayment(amount, date);
+                if (amount === 0) {
+                    return;
+                };
+            };
+        };
+        // if all invoices are paid and there is an overpayment, 
+        // create a future invoice and pay it.
+        lease.makeInvoice();
+        lease.makePayment(amount, date);
+        return;
+    };
+
+    // create an invoice for the this lease
+    var makeInvoice = function(lease) {
+        // TODO:
+        if (lease.invoices.length >= lease.numPeriods) {
+            lease.status === "Retired";
+            thileases.unit.changeStatus("Available");
+            console.debug("Lease retired/Unit available");
+            return;
+        }
+        var dueDate = lease.nextDueDate();
+        console.debug("Making invoice #" + (lease.invoices.length + 1) + " for unit " + lease.unit.unitId + " on " + dueDate.toDateString());
+        var invoice = new Invoice(lease, dueDate);
+        this.invoices.push(invoice);
+    };
+
+    var presaveInvoice = function(invoice, lease, date, amount = lease.rate) {
+        invoice.lease = lease;             // lease to which this invoice applies
+        invoice.amountDue = amount;        // payment amount due
+        invoice.dueDate = date;            // date payment is due
+        invoice.payments = [];             // list of payments applied to this invoice
+        invoice.ref = date.getFullYear().toString().slice(-2)
+            + ('0' + date.getMonth()).slice(-2)
+            + ('0' + date.getDate()).slice(-2)
+            + '-' + lease.unit.unitId;
+    };
+    // returns the balance due on this invoice
+    var balance = function(invoice) {
+        var balance = invoice.amountDue;
+        for (var i = 0; i < invoice.payments.length; i++) {
+            balance -= invoice.payments[i].amount;
+        };
+        return balance;
+    };
+    // applies a payment to this invoice and returns the amount of overpayment
+    var applyPayment = function(invoice, amount, date) {
+        console.debug("Applying payment of $" + amount + " on " + date.toDateString());
+        var balance = invoice.balance();
+        // apply the full amount of the payment to this invoice
+        if (amount <= balance) {
+            invoice.payments.push(new Payment(invoice, amount, date));
+            // console.debug("Invoice for " + this.lease.unit.unitId + " has a balance of $" + this.balance() + ".");
+            return 0;
+            // if there is an overpayment...
+        } else {
+            this.payments.push(new Payment(invoice, balance, date));
+            console.debug("Invoice for " + invoice.lease.unit.unitId + " paid.");
+            return amount - balance;
+        };
+    };
+
+
 
     arLeaseCtl.leases = [];
     arLeaseCtl.newLease = {};

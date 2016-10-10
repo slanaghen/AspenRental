@@ -4,7 +4,10 @@ angular.module('AspenRental', ['ngRoute'])
     .config(Router);
 
 // inject routeFinder
+// Router.$inject = ['$routeProvider'];
 Router.$inject = ['$routeProvider'];
+
+console.log('Loading publicRoutes');
 
 // $routeProvider comes from the ngRoute module
 function Router($routeProvider) {
@@ -21,7 +24,12 @@ function Router($routeProvider) {
             controller: 'ARTenantController as arTenantCtl'
         })
         .when('/lease/', {
-            templateUrl: '/templates/lease.html'
+            templateUrl: '/templates/lease.html',
+            controller: 'ARLeaseController as arLeaseCtl'
+        })        
+        .when('/invoice/', {
+            templateUrl: '/templates/invoice.html',
+            controller: 'ARInvoiceController as arInvoiceCtl'
         })
         .when('/payments/', {
             templateUrl: '/templates/payments.html'

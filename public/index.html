@@ -13,11 +13,8 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.8/angular.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.8/angular-route.min.js"></script>
 
-  <!-- dummy definitions -->
-  <!-- TODO: replace this with live database when ready-->
-  <!--<script src="../models/dummy.js"></script>-->
-
   <!-- angular routing and controllers -->
+  <!--<script src="controllers/app.js"></script>-->
   <script src="controllers/publicRoutes.js"></script>
   <script src="controllers/unitCtrl.js"></script>
   <script src="controllers/tenantCtrl.js"></script>
@@ -74,7 +71,7 @@
     <!-- /.navbar -->
   </div>
 
-  <div class="top-buffer" ng-controller='ARLeaseController as arLeaseCtl'>
+  <div class="top-buffer">
     <ng-view></ng-view>
   </div>
 </body>

@@ -1,0 +1,19 @@
+<div>
+    <!-- table of invoices -->
+    <table style="width:100%">
+        <h2>Invoices</h2>
+        <tr>
+            <th>Name</th>
+            <th>Lease</th>
+            <th>Amount</th>
+            <th>Due</th>
+        </tr>
+        <tr ng-repeat="lease in arInvoiceCtrl.invoices() | orderBy:'name'">
+            <td>{{ invoice.name }}</td>
+            <td>{{ invoice.lease }}</td>            
+            <td>{{ lease.amount | currency }}</td>
+            <td>{{ lease.due | date }}</td>
+        </tr>
+    </table>
+
+</div>

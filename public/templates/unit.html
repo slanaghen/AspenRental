@@ -1,7 +1,5 @@
 <div>
 
-    <button ng-click="unitTypes.getUnitTypes()">UnitTypes!</button>
-
     <!-- table of unit types -->
     <table style="width:100%">
         <h2>Unit Types</h2>
@@ -34,16 +32,6 @@
         </tr>
     </table>
 
-    <!-- form for creation of a new unit -->
-    <h2>Add Unit</h2>
-    <form ng-submit="arUnitCtl.addUnit()">
-        <input placeholder="Unit" type="text" ng-model="arUnitCtl.newUnit.name" required="" />
-        <!--TODO: This doesn't work.  Need to find unitType by given size-->
-        <input placeholder="Type " type="text" ng-model="arUnitCtl.newUnit.unitType" />
-        <input placeholder="Status" type="text" ng-model="arUnitCtl.newUnit.status" />
-        <button type="submit">Add Unit</button>
-    </form>
-
     <!-- form for creation of a new unit type -->
     <h2>Add Unit Type</h2>
     <form ng-submit="arUnitCtl.addUnitType()">
@@ -55,6 +43,25 @@
         <input placeholder="Default Period" type="text" ng-model="arUnitCtl.newUnitType.defaultPeriod" />
         <input placeholder="Default Num Periods" type="number" ng-model="arUnitCtl.newUnitTYpe.defaultNumPeriods" />
         <button type="submit">Add Unit Type</button>
-    </form>    
+    </form>   
+
+    <!-- form for creation of a new unit -->
+    <h2>Add Unit</h2>
+        <!--<ul ng-repeat="unitType in arUnitCtl.unitTypes | orderBy:'size' ">
+            <li>{{ unitType.name }} - {{ unitType.size }}</li>
+        </ul>-->
+    <form ng-submit="arUnitCtl.addUnit()">
+        <input placeholder="Unit" type="text" ng-model="arUnitCtl.newUnit.name" required="" />
+        <!--<select 
+            ng-model="arUnitCtl.newUnit.unitType" 
+            ng-options="unitType._id as unitType.size for unitType in arUnitCtrl.unitTypes"
+        >-->
+        <select ng-model="arUnitCtl.newUnit.unitType">
+            <!--<option value="" disabled selected hidden>Select Unit Type</option>-->
+            <option ng-repeat="unitType in arUnitCtrl.unitTypes" value="{{arUnitCtl.newUnit.unitType}}">{{unitType.size}}</option>
+        </select>
+        <!-- after unitType is selected, populate form with default rate, deposit, period, numPeriods -->
+        <button type="submit">Add Unit</button>
+    </form> 
 
 </div>

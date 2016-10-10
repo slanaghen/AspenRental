@@ -1,5 +1,8 @@
+console.log('Loading auth');
+
 var User = require('../models/user'),
-    bcrypt = require('bcryptjs'),
+    Bcrypt = require('bcryptjs'),
+    Colors = require('colors'),
     errors = {
         general: {
             status: 500,
@@ -34,7 +37,7 @@ module.exports = {
             } else {
                 console.info('auth.login.user', user);
                 // at this point, user.password is hashed!
-                bcrypt.compare(req.body.password, user.password, (bcryptErr, matched) => {
+                Bcrypt.compare(req.body.password, user.password, (bcryptErr, matched) => {
                     // matched will be === true || false
                     if( bcryptErr ) {
                         console.error('MongoDB error:'.red, err);

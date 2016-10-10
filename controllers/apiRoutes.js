@@ -1,4 +1,7 @@
 // Aspen controller
+
+console.log('Loading apiRoutes');
+
 // require all of the mongoose schema models to be used
 var UnitType = require("../models/unitTypeModel"),
     Unit = require("../models/unitModel"),
@@ -6,7 +9,7 @@ var UnitType = require("../models/unitTypeModel"),
     Lease = require("../models/leaseModel"),
     Invoice = require("../models/invoiceModel"),
     Payment = require("../models/paymentModel"),
-    bcrypt = require('bcryptjs'),
+    Bcrypt = require('bcryptjs'),
     User = require('../models/user');
 
 // errors = {
@@ -44,7 +47,7 @@ module.exports = {
     //         } else {
     //             console.info('auth.login.user', user);
     //             // at this point, user.password is hashed!
-    //             bcrypt.compare(req.body.password, user.password, (bcryptErr, matched) => {
+    //             Bcrypt.compare(req.body.password, user.password, (bcryptErr, matched) => {
     //                 // matched will be === true || false
     //                 if( bcryptErr ) {
     //                     console.error('MongoDB error:'.red, err);
@@ -181,7 +184,6 @@ module.exports = {
         if (req.params.item) {
             var itemName = req.params.item; // item is unitType, unit, tenant, invoice or payment (or array of one type)
             var item = req.body;  // this contains the object (or array of objects) defining the item
-
 
             if (typeof req.body === 'Array') {  
                 console.log("POST::many",itemName, item);
