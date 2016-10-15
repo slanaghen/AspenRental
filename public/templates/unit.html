@@ -9,7 +9,7 @@
             <th>Rate</th>
             <th>Quantity</th>
         </tr>
-        <tr ng-repeat="unitType in arUnitCtl.unitTypes | orderBy:'size' ">
+        <tr ng-repeat="unitType in arUnitCtl.unitTypes | orderBy:'size'" ng-init="arUnitCtl.getUnitTypes()">
             <td>{{ unitType.size }}</td>
             <td>{{ unitType.description }}</td>
             <td>{{ unitType.defaultRate  | currency}}/{{ unitType.defaultPeriod }}</td>
@@ -25,7 +25,7 @@
             <th>Size</th>
             <th>Status</th>
         </tr>
-        <tr ng-repeat="unit in arUnitCtl.units | orderBy:'name' ">
+        <tr ng-repeat="unit in arUnitCtl.units | orderBy:'name'" ng-init="arUnitCtl.getUnits()">
             <td>{{ unit.name }}</td>
             <td>{{ unit.unitType.size }}</td>
             <td>{{ unit.status }}</td>
@@ -47,18 +47,11 @@
 
     <!-- form for creation of a new unit -->
     <h2>Add Unit</h2>
-        <!--<ul ng-repeat="unitType in arUnitCtl.unitTypes | orderBy:'size' ">
-            <li>{{ unitType.name }} - {{ unitType.size }}</li>
-        </ul>-->
     <form ng-submit="arUnitCtl.addUnit()">
-        <input placeholder="Unit" type="text" ng-model="arUnitCtl.newUnit.name" required="" />
-        <!--<select 
-            ng-model="arUnitCtl.newUnit.unitType" 
-            ng-options="unitType._id as unitType.size for unitType in arUnitCtrl.unitTypes"
-        >-->
-        <select ng-model="arUnitCtl.newUnit.unitType">
-            <!--<option value="" disabled selected hidden>Select Unit Type</option>-->
-            <option ng-repeat="unitType in arUnitCtrl.unitTypes" value="{{arUnitCtl.newUnit.unitType}}">{{unitType.size}}</option>
+        <select 
+            ng-model="arUnitCtl.newUnit.unitType"
+            ng-options="unitType._id as unitType.size for unitType in arUnitCtl.unitTypes">
+            <option value="" required>Select Unit Type</option> <!--  disabled selected hidden? -->
         </select>
         <!-- after unitType is selected, populate form with default rate, deposit, period, numPeriods -->
         <button type="submit">Add Unit</button>

@@ -5,13 +5,15 @@
         <h2>Tenants</h2>
         <tr>
             <th>Name</th>
+            <th>ID</th>
             <th>Address</th>
             <th>Cell Phone</th>
             <th>EMail</th>
             <th>Comments</th>
         </tr>
         <tr ng-repeat="tenant in arTenantCtl.tenants  | orderBy:'name'">
-            <td>{{ tenant.firstName }} {{ tenant.lastName }} ({{ tenant.name }})</td>
+            <td>{{ tenant.firstName }} {{ tenant.lastName }}</td>
+            <td>{{ tenant.name }}</td>
             <td>{{ tenant.address }}, {{ tenant.city }}, {{ tenant.state }} {{ tenant.zip }}</td>
             <td>{{ tenant.cellPhone }}</td>
             <td>{{ tenant.email }}</td>
@@ -30,13 +32,13 @@
         <input placeholder="State (CO)" type="text" ng-model="arTenantCtl.newTenant.state" />
         <input placeholder="Zip (81210)" type="text" ng-model="arTenantCtl.newTenant.zip" />
         <input placeholder="Phone" type="text" ng-model="arTenantCtl.newTenant.cellPhone" required="" />
-        <input placeholder="EMail" type="text" ng-model="arTenantCtl.newTenant.email" name="uEmail" required="" />
+        <input placeholder="EMail" type="text" ng-model="arTenantCtl.newTenant.email" required="" />
         <button type="submit">Add Tenant</button>
     </form>
 
     <!-- form for creation of a new tenant -->
     <!-- TODO -->
-    <h2>Edit Tenant</h2>
+    <!--<h2>Edit Tenant</h2>
     <input placeholder="Search Tenant Name" ng-model="arTenantCtl.pmtFilter.tenant">
     <form class="form-inline well" ng-submit="arTenantCtl.editTenant()">
         <input class="form-control" type="text" placeholder="Firstname" ng-model="arTenantCtl.editTenant.firstName" required="" />
@@ -48,6 +50,6 @@
         <input class="form-control" type="text" placeholder="Phone" ng-model="arTenantCtl.editTenant.cellPhone" required="" />
         <input class="form-control" type="text" placeholder="EMail" ng-model="arCtarTenantCtlrlr.editTenant.email" name="uEmail" required="" />
         <button type="submit">Update Tenant</button>
-    </form>
+    </form>-->
 
 </div>

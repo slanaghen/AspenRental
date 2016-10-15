@@ -42,19 +42,19 @@ function arTenantController($http) {
     arTenantCtl.tenants = [];
     arTenantCtl.newTenant = {};
 
-    var presaveTenant = function (tenant,fname, lname, addr, city = "Salida", state = "CO", zip = 81201, phone, email) {
-        tenant.firstName = fname.toLowerCase().capitalize();  // first name of tenant
-        tenant.lastName = lname.toLowerCase().capitalize();   // last name of tenant
-        tenant.address = addr;                                // street addresss
-        tenant.city = city.toLowerCase().capitalize();        // city
-        tenant.state = state.toUpperCase();                   // state
-        tenant.zip = zip;                                     // zip code
-        tenant.cellPhone = phone.formatPhone();               // cell phone number
-        tenant.email = email;                                 // email address
-        // this.driversLicense = driversLicense;               // drivers license
-        // this.employer = employer;                           // employer
-        tenant.comments = "";                                 // comments   
-    };
+    // var presaveTenant = function (tenant,fname, lname, addr, city = "Salida", state = "CO", zip = 81201, phone, email) {
+    //     tenant.firstName = fname.toLowerCase().capitalize();  // first name of tenant
+    //     tenant.lastName = lname.toLowerCase().capitalize();   // last name of tenant
+    //     tenant.address = addr;                                // street addresss
+    //     tenant.city = city.toLowerCase().capitalize();        // city
+    //     tenant.state = state.toUpperCase();                   // state
+    //     tenant.zip = zip;                                     // zip code
+    //     tenant.cellPhone = phone.formatPhone();               // cell phone number
+    //     tenant.email = email;                                 // email address
+    //     // this.driversLicense = driversLicense;               // drivers license
+    //     // this.employer = employer;                           // employer
+    //     tenant.comments = "";                                 // comments   
+    // };
 
     var getName = function(tenant) {
         return tenant.firstName + " " + tenant.lastName;
@@ -78,7 +78,9 @@ function arTenantController($http) {
     // add a new customer
     arTenantCtl.addTenant = function () {
         if (validateTenant(arTenantCtl.newTenant)) {
+            arTenantCtl.newTenant.name = "T" + String("000" + arTenantCtl.tenants.length).slice(-3); // pad number with zeroes
             arTenantCtl.tenants.push(arTenantCtl.newTenant);
+            console.log("Posting tenant", arTenantCtl.newTenant)
             $http.post('/api/tenant', arTenantCtl.newTenant)
                 .then(function (res) {
                     console.log("Received: Post /api/tenant", res.data);
@@ -90,6 +92,8 @@ function arTenantController($http) {
             arTenantCtl.newTenant = {};
             console.debug("Valid tenant added");
             arTenantCtl.badTenant = false;
+            // repopulate list
+            arTenantCtl.getTenants();
         } else {
             console.debug("Invalid tenant NOT added");
             arTenantCtl.badTenant = true;

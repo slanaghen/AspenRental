@@ -19,11 +19,11 @@ module.exports = function(app) {
 
     // middleware for api paths to verify a valid session key
     function checkKeyMiddleware( req, res, next ) {
-        // console.log("Received Method:", req.method);
-        // console.log("Received Path:", req.path);
-        // console.log("Received Params:", req.params);
-        // console.log("Received Body:", req.body);
-        // console.log("Received Query:", req.query);
+        console.log("Received Method:", req.method);
+        console.log("Received Path:", req.path);
+        console.log("Received Params:", req.params);
+        console.log("Received Body:", req.body);
+        console.log("Received Query:", req.query);
         // console.log("Checking for key: ", req.query.key);
         // if( req.query.key ) {
         //     next();

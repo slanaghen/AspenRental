@@ -47,7 +47,7 @@ function arUnitController($http) {
         unit.unitType.statusCount[unit.status]++;
     };
 
-    var presaveUnitType = function(unitType, description, size = "10x10", deposit = 25, rate = 85,
+    var presaveUnitType = function (unitType, description, size = "10x10", deposit = 25, rate = 85,
         period = 'month', numPeriods = 12) {
         unitType.description = description;             // description of this type of unit
         unitType.size = size;                           // size of this type of unit
@@ -59,7 +59,7 @@ function arUnitController($http) {
         unitType.statusCount = { 'Available': 0, 'Occupied': 0, 'LockedOut': 0, 'Unrentable': 0 };
     };
 
-    var changeStatus = function(unit, to) {
+    var changeStatus = function (unit, to) {
         unit.unitType.statusCount[unit.status]--;
         unit.status = to.toLowerCase().capitalize();
         unit.unitType.statusCount[unit.status]++;
@@ -123,23 +123,37 @@ function arUnitController($http) {
         return arUnitCtl.availableUnitTypes;
     };
 
+
+    // function searchUnitTypes(nameKey, myArray) {
+    //     for (var i = 0; i < myArray.length; i++) {
+    //         console.log("searching ", myArray[i]._id, nameKey)
+    //         if (myArray[i]._id === nameKey) {
+    //             return myArray[i];
+    //         }
+    //     }
+    // }
+
     // add a new unit
     // TODO: add validation
     arUnitCtl.addUnit = function () {
-        console.debug("AddUnit:", arUnitCtl.newUnit);
         if (validateUnit(arUnitCtl.newUnit)) {
             arUnitCtl.newUnit.status = "Available";
+            arUnitCtl.newUnit.size = arUnitCtl.newUnit.unitType.size;
+            arUnitCtl.newUnit.name = "S" + String("00" + arUnitCtl.units.length).slice(-2); // pad number with zeroes
+            // arUnitCtl.newUnit.name="S"+searchUnitTypes(arUnitCtl.newUnit.unitType, arUnitCtl.unitTypes);
             $http.post('/api/unit', arUnitCtl.newUnit)
                 .then(function (res) {
                     console.log("Posted /api/unit", res.data);
                     arUnitCtl.units.push(res.data);
-                },function (error, status) {
+                }, function (error, status) {
                     err = { message: error, status: status };
                     console.log(err.status);
                 });
             arUnitCtl.newUnit = {};
             console.debug("Valid unit added");
             arUnitCtl.badUnit = false;
+            // re-fetch units to populate unitType information
+            arUnitCtl.getUnits();
         } else {
             console.debug("Invalid unit NOT added");
             arUnitCtl.badUnit = true;
@@ -152,10 +166,10 @@ function arUnitController($http) {
         if (validateUnitType(arUnitCtl.newUnitType)) {
             $http.post('/api/unitType', arUnitCtl.newUnitType)
                 // .success(function (res) {
-                .then(function(res){
+                .then(function (res) {
                     console.log("Posted /api/unitType", res.data);
                     arUnitCtl.unitTypes.push(res.data);
-                },function (error, status) {
+                }, function (error, status) {
                     err = { message: error, status: status };
                     console.log(err.status);
                 });

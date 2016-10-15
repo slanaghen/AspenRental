@@ -169,7 +169,7 @@ function arLeaseController($http) {
     };
 
     // create an invoice for the this lease
-    var makeInvoice = function(lease) {
+    var addInvoice = function(lease) {
         // TODO:
         if (lease.invoices.length >= lease.numPeriods) {
             lease.status === "Retired";
@@ -245,7 +245,7 @@ function arLeaseController($http) {
     // TODO: add validation
     arLeaseCtl.addLease = function () {
         if (validateLease(arLeaseCtl.newLease)) {
-            // TODO: add key for api
+            arLeaseCtl.newLease.name = "L" + String("0000" + arLeaseCtl.leases.length).slice(-4); // pad number with zeroes
             $http.post('/api/lease', arLeaseCtl.newLease)
                 .then(function (res) {
                     console.log("ERROR: Post /api/lease", res.data);
@@ -290,5 +290,6 @@ function arLeaseController($http) {
             };
         };
     };
+    arLeaseCtl.getLeases();
 };
 

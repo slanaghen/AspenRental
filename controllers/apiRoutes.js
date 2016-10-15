@@ -104,32 +104,32 @@ module.exports = {
             if (id) {
                 console.log("GET::", item, id);
                 if (item === "unitType") {
-                    UnitType.find({ name: id }, (err, found) => {
+                    UnitType.find({ name: id },(err, found) => {
                         console.log("Sending",found.length,"unitType");
                         res.json(found);
                     });
                 } else if (item === "unit") {
-                    Unit.find({ name: id }, (err, found) => {
+                    Unit.find({ name: id }).populate('unitType').exec( (err, found) => {
                         console.log("Sending",found.length,"unit");
                         res.json(found);
                     });
                 } else if (item === "tenant") {
-                    Tenant.find({ name: id }, (err, found) => {
+                    Tenant.find({ name: id },(err, found) => {
                         console.log("Sending",found.length,"tenant");
                         res.json(found);
                     });
                 } else if (item === "lease") {
-                    Lease.find({ name: id }, (err, found) => {
+                    Lease.find({ name: id }).populate('unit').populate('tenantId').exec( (err, found) => {
                         console.log("Sending",found.length,"lease");
                         res.json(found);
                     });
                 } else if (item === "invoice") {
-                    Invoice.find({ name: id }, (err, found) => {
+                    Invoice.find({ name: id }).populate('leaseId').exec( (err, found) => {
                         console.log("Sending",found.length,"invoice");
                         res.json(found);
                     });
                 } else if (item === "payment") {
-                    Payment.find({ name: id }, (err, found) => {
+                    Payment.find({ name: id }).populate().exec( (err, found) => {
                         console.log("Sending",found.length,"payment");
                         res.json(found);
                     });
@@ -144,7 +144,7 @@ module.exports = {
                         res.json(found);
                     });
                 } else if (item === "unit") {
-                    Unit.find({}, (err, found) => {
+                    Unit.find({}).populate('unitType').exec( (err, found) => {
                         console.log("Sending",found.length,"units");
                         res.json(found);
                     });
@@ -154,17 +154,17 @@ module.exports = {
                         res.json(found);
                     });
                 } else if (item === "lease") {
-                    Lease.find({}, (err, found) => {
+                    Lease.find({}).populate('unit').populate('tenantId').exec( (err, found) => {
                         console.log("Sending",found.length,"leases");
                         res.json(found);
                     });
                 } else if (item === "invoice") {
-                    Invoice.find({}, (err, found) => {
+                    Invoice.find({}).populate('leaseId').exec( (err, found) => {
                         console.log("Sending",found.length,"invoices");
                         res.json(found);
                     });
                 } else if (item === "payment") {
-                    Payment.find({}, (err, found) => {
+                    Payment.find({}).populate('invoideId').exec( (err, found) => {
                         console.log("Sending",found.length,"payments");
                         res.json(found);
                     });
@@ -181,6 +181,7 @@ module.exports = {
 
     // POST::/api/:item
     upsert: (req, res) => {
+        console.log("upsert",req.params.item)
         if (req.params.item) {
             var itemName = req.params.item; // item is unitType, unit, tenant, invoice or payment (or array of one type)
             var item = req.body;  // this contains the object (or array of objects) defining the item
@@ -211,7 +212,6 @@ module.exports = {
                 } else if (itemName === "unit") {
                     newItem = new Unit(req.body);
                 } else if (itemName === "tenant") {
-                    item.name = req.body.lastName.substring(0,4).toUpperCase() + "-01";
                     newItem = new Tenant(req.body);
                 } else if (itemName === "lease") {
                     newItem = new Lease(req.body);
