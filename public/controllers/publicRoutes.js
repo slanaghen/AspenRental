@@ -16,8 +16,8 @@ function Router($routeProvider) {
         .when('/home/', {
             templateUrl: '/templates/home.html'
         })
-        .when('/action/', {
-            templateUrl: '/templates/action.html'
+        .when('/invoice/', {
+            templateUrl: '/templates/invoice.html'
         })
         .when('/tenant/', {
             templateUrl: '/templates/tenant.html',

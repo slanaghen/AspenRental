@@ -54,9 +54,9 @@
             <th>Paid Thru</th>
         </tr>
         <tr ng-repeat="lease in arLeaseCtl.leases | orderBy:'unit.unitId' | filter:arLeaseCtl.leaseFilter">
-            <td>{{ lease.unit.unitId }}</td>
-            <td>{{ lease.tenant }}</td>
-            <td>{{ lease.ref }}</td>
+            <td>{{ lease.unit.name }}</td>
+            <td>{{ lease.tenant.name }}</td>
+            <td>{{ lease.name }}</td>
             <td>{{ lease.originalDate | date }}</td>
             <td>{{ lease.endDate() | date }}</td>
             <td>{{ lease.rate | currency }}/{{ lease.period }}</td>
@@ -68,21 +68,22 @@
     <!-- form for creation of a new lease -->
     <h2>Add Lease</h2>
     <form ng-submit="arLeaseCtl.addLease()" >
-
         <select 
             ng-model="arLeaseCtl.newLease.unit"
-            ng-options="unit._id as unit.name for unit in arLeaseCtrl.unitFactory.units">
+            ng-options="unit._id as unit.name for unit in arLeaseCtl.unitFactory.units">
             <option value="" required>Select Unit</option>
         </select>
         <select 
             ng-model="arLeaseCtl.newLease.tenant"
-            ng-options="tenant._id as tenant.name for tenant in arLeaseCtrl.tenantFactory.tenants">
+            ng-options="tenant._id as tenant.name for tenant in arLeaseCtl.tenantFactory.tenants">
             <option value="" required>Select Tenant</option> 
         </select>
 
         <input placeholder="Date (today)" type="date" ng-model="arLeaseCtl.newLease.originalDate" />
         <input placeholder="Rate ({{arLeaseCtl.newLease.unit.unitType.defaultRate}})" type="number" ng-model="arLeaseCtl.newLease.rate" />
         <input placeholder="Period (month)" type="text" ng-model="arLeaseCtl.newLease.period" />
+        <input placeholder="Num Periods (12)" type="number" ng-model="arLeaseCtl.newLease.numPeriods" />        
+        <input placeholder="Deposit ($)" type="number" ng-model="arLeaseCtl.newLease.deposit" />
         <button type="submit">Add Lease</button>
     </form>
 

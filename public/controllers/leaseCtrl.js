@@ -12,7 +12,7 @@ arLeaseController.$inject = ['arUnitFactory', 'arTenantFactory', '$http'];
 // 	};
 // };
 
-function arLeaseController(arUnitFactory,arTenantFactory,$http) {
+function arLeaseController(arUnitFactory, arTenantFactory, $http) {
     console.debug('ARLeaseController loaded');
     var arLeaseCtl = this;
     arLeaseCtl.unitFactory = arUnitFactory;
@@ -23,28 +23,28 @@ function arLeaseController(arUnitFactory,arTenantFactory,$http) {
         return true;
     };
 
-    var presaveLease = function(lease, unit, tenant, date = Date(),
-        deposit = unit.unitType.defaultDeposit,
-        rate = unit.unitType.defaultRate,
-        period = unit.unitType.defaultPeriod,
-        numPeriods = unit.unitType.defaultNumPeriods) {
-        lease.unit = unit;               // unit being leased
-        lease.unit.changeStatus("Occupied");// set the unit's status to occupied with the new lease
-        // TODO find a way to make this private/hidden
-        // this.unit.status = "Occupied";  // set the unit's status to occupied with the new lease
-        lease.tenant = tenant;           // tenant's full name
-        lease.originalDate = date;       // date lease is signed
-        lease.deposit = deposit;
-        lease.rate = rate;               // periodic (month/quarter/year) rent
-        lease.period = period;           // month, quarter or year
-        lease.numPeriods = numPeriods;   // ie. 12 period for a month period year long lease
-        lease.status = "Pending";        // Pending, Active or Retired
-        lease.invoices = [new Invoice(lease, date, lease.rate + deposit)];  // list of invoices applied to this lease
-        lease.ref = date.getFullYear().toString().slice(-2)
-            + ('0' + date.getMonth()).slice(-2)
-            + ('0' + date.getDate()).slice(-2)
-            + '-' + lease.unit.unitId;
-    };
+    // var presaveLease = function(lease, unit, tenant, date = Date(),
+    //     deposit = unit.unitType.defaultDeposit,
+    //     rate = unit.unitType.defaultRate,
+    //     period = unit.unitType.defaultPeriod,
+    //     numPeriods = unit.unitType.defaultNumPeriods) {
+    //     lease.unit = unit;               // unit being leased
+    //     lease.unit.changeStatus("Occupied");// set the unit's status to occupied with the new lease
+    //     // TODO find a way to make this private/hidden
+    //     // this.unit.status = "Occupied";  // set the unit's status to occupied with the new lease
+    //     lease.tenant = tenant;           // tenant's full name
+    //     lease.originalDate = date;       // date lease is signed
+    //     lease.deposit = deposit;
+    //     lease.rate = rate;               // periodic (month/quarter/year) rent
+    //     lease.period = period;           // month, quarter or year
+    //     lease.numPeriods = numPeriods;   // ie. 12 period for a month period year long lease
+    //     lease.status = "Pending";        // Pending, Active or Retired
+    //     lease.invoices = [new Invoice(lease, date, lease.rate + deposit)];  // list of invoices applied to this lease
+    //     lease.ref = date.getFullYear().toString().slice(-2)
+    //         + ('0' + date.getMonth()).slice(-2)
+    //         + ('0' + date.getDate()).slice(-2)
+    //         + '-' + lease.unit.unitId;
+    // };
         
     // calculate the end date of the lease
     var endDate = function (lease) {
@@ -236,7 +236,7 @@ function arLeaseController(arUnitFactory,arTenantFactory,$http) {
                     console.log("Leases received:", res.data);
                     arLeaseCtl.leases = res.data;
                 },function (error, status) {
-                    err = { message: "Leases error:"+error, status: status };
+                    var err = { message: "Leases error:"+error, status: status };
                     console.log(err.status);
                 });
         console.debug('got leases', arLeaseCtl.leases);
@@ -247,13 +247,14 @@ function arLeaseController(arUnitFactory,arTenantFactory,$http) {
     // TODO: add validation
     arLeaseCtl.addLease = function () {
         if (validateLease(arLeaseCtl.newLease)) {
+            arLeaseCtl.newLease.status = "Pending";
             arLeaseCtl.newLease.name = "L" + String("0000" + arLeaseCtl.leases.length).slice(-4); // pad number with zeroes
             $http.post('/api/lease', arLeaseCtl.newLease)
                 .then(function (res) {
                     console.log("Leases added:", res.data);
                     arLeaseCtl.leases.push(res.data);
                 },function (error, status) {
-                    err = { message: "Leases add error:"+error, status: status };
+                    var err = { message: "Leases add error:"+error, status: status };
                     console.log(err.status);
                 });
             arLeaseCtl.leases.push(arLeaseCtl.newLease);

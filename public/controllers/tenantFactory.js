@@ -21,7 +21,6 @@ function arTenantFactory($http) {
         // TODO: add key for api
         $http.get('/api/tenant')
             .then(function (res) {
-                console.log("Tenants received", res.data);
                 TenantFactory.tenants = res.data;
                 console.debug('got tenants', TenantFactory.tenants);
                 return TenantFactory.tenants;
