@@ -2,7 +2,7 @@
 angular.module('AspenRental')
     .controller('ARUnitController', arUnitController);
 
-arUnitController.$inject = ['$http'];
+arUnitController.$inject = ['arUnitFactory', '$http'];
 
 // validate unitType properties
 var validateUnitType = function (unitType) {
@@ -35,7 +35,7 @@ var validateUnit = function (unit) {
     return true;
 };
 
-function arUnitController($http) {
+function arUnitController(arUnitFactory, $http) {
     console.debug('ARUnitController loaded');
     var arUnitCtl = this;
 
@@ -65,39 +65,13 @@ function arUnitController($http) {
         unit.unitType.statusCount[unit.status]++;
     }
 
-    // initialize ng models
-    arUnitCtl.units = [];
-    arUnitCtl.unitTypes = [];
-    arUnitCtl.availableUnitTypes = [];
+    arUnitCtl.unitFactory = arUnitFactory;
 
     arUnitCtl.newUnit = {};
     arUnitCtl.newUnitType = {};
     arUnitCtl.newUnit = {};
     arUnitCtl.newUnitType = {};
 
-    // get all unitTypes from database
-    arUnitCtl.getUnitTypes = function () {
-        console.debug('getting unitTypes', arUnitCtl.unitTypes);
-        // TODO: add key for api
-        $http.get('/api/unitType')
-            .then(function (res) {
-                console.log("UnitTypes received:", res.data);
-                arUnitCtl.unitTypes = res.data;
-                console.debug('got unitTypes', arUnitCtl.unitTypes);
-            });
-    };
-
-    // get all units from database
-    arUnitCtl.getUnits = function () {
-        console.debug('getting units', arUnitCtl.units);
-        // TODO: add key for api
-        $http.get('/api/unit')
-            .then(function (res) {
-                console.log("Units received:", res.data);
-                arUnitCtl.units = res.data;
-                console.debug('got units', arUnitCtl.units);
-            });
-    };
 
     // Not used
     // arUnitCtl.getNumOfSize = function (size) {
@@ -110,18 +84,6 @@ function arUnitController($http) {
     //     return cnt;
     // };
 
-    // get all unitTypes that have 1 or more that are available
-    arUnitCtl.getAvailableUnitTypes = function () {
-        console.debug("get available unitTypes");
-        for (var i = 0; i < arUnitCtl.units.length; i++) {
-            if (arUnitCtl.units[i].status === 'Available') {
-                if (arUnitCtl.availableUnitTypes.indexof(arUnitCtl.units[i], unitType) === -1) {
-                    arUnitCtl.availableUnitTypes.push(arUnitCtl.units[i].unitType);
-                }
-            }
-        }
-        return arUnitCtl.availableUnitTypes;
-    };
 
 
     // function searchUnitTypes(nameKey, myArray) {
@@ -153,7 +115,7 @@ function arUnitController($http) {
             console.debug("Valid unit added");
             arUnitCtl.badUnit = false;
             // re-fetch units to populate unitType information
-            arUnitCtl.getUnits();
+            // arUnitCtl.getUnits();
         } else {
             console.debug("Invalid unit NOT added");
             arUnitCtl.badUnit = true;
@@ -182,9 +144,5 @@ function arUnitController($http) {
         };
     };
 
-    // initially populate unit and unitTypelists
-    arUnitCtl.getUnitTypes();
-    arUnitCtl.getUnits();
-    arUnitCtl.getAvailableUnitTypes();
 };
 

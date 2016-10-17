@@ -2,7 +2,7 @@
 angular.module('AspenRental')
     .controller('ARLeaseController', arLeaseController);
 
-arLeaseController.$inject = ['$http'];
+arLeaseController.$inject = ['arUnitFactory', 'arTenantFactory', '$http'];
 
 // function homeController ($http) {
 // 	var hCtrl = this;
@@ -12,9 +12,11 @@ arLeaseController.$inject = ['$http'];
 // 	};
 // };
 
-function arLeaseController($http) {
+function arLeaseController(arUnitFactory,arTenantFactory,$http) {
     console.debug('ARLeaseController loaded');
     var arLeaseCtl = this;
+    arLeaseCtl.unitFactory = arUnitFactory;
+    arLeaseCtl.tenantFactory = arTenantFactory;
 
     // validate lease properties
     var validateLease = function (lease) {
@@ -231,10 +233,10 @@ function arLeaseController($http) {
         // TODO: add key for api
         $http.get('/api/lease')
                 .then(function (res) {
-                    console.log("ERROR: Get /api/lease", res.data);
+                    console.log("Leases received:", res.data);
                     arLeaseCtl.leases = res.data;
                 },function (error, status) {
-                    err = { message: error, status: status };
+                    err = { message: "Leases error:"+error, status: status };
                     console.log(err.status);
                 });
         console.debug('got leases', arLeaseCtl.leases);
@@ -248,10 +250,10 @@ function arLeaseController($http) {
             arLeaseCtl.newLease.name = "L" + String("0000" + arLeaseCtl.leases.length).slice(-4); // pad number with zeroes
             $http.post('/api/lease', arLeaseCtl.newLease)
                 .then(function (res) {
-                    console.log("ERROR: Post /api/lease", res.data);
+                    console.log("Leases added:", res.data);
                     arLeaseCtl.leases.push(res.data);
                 },function (error, status) {
-                    err = { message: error, status: status };
+                    err = { message: "Leases add error:"+error, status: status };
                     console.log(err.status);
                 });
             arLeaseCtl.leases.push(arLeaseCtl.newLease);

@@ -47,7 +47,7 @@ function arInvoiceController($http) {
         this.invoices.push(invoice);
     };
 
-    var presaveInvoice = function(invoice, invoice, date, amount = invoice.rate) {
+    var presaveInvoice = function(invoice, date, amount = invoice.rate) {
         invoice.invoice = invoice;             // invoice to which this invoice applies
         invoice.amountDue = amount;        // payment amount due
         invoice.dueDate = date;            // date payment is due

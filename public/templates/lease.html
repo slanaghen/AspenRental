@@ -67,22 +67,18 @@
 
     <!-- form for creation of a new lease -->
     <h2>Add Lease</h2>
-    <form ng-submit="arLeaseCtl.addLease()">
+    <form ng-submit="arLeaseCtl.addLease()" >
 
         <select 
-            ng-init="arUnitCtl.getUnits()"
             ng-model="arLeaseCtl.newLease.unit"
-            ng-options="unit._id as unit.name for unit in arUnitCtrl.units">
-            <option value="" required>Select Unit</option> <!--  disabled selected hidden? -->
+            ng-options="unit._id as unit.name for unit in arLeaseCtrl.unitFactory.units">
+            <option value="" required>Select Unit</option>
         </select>
         <select 
-            ng-init="arLeaseCtl.getLeases()"
             ng-model="arLeaseCtl.newLease.tenant"
-            ng-options="tenant._id as tenant.name for tenant in arTenantCtrl.tenants">
-            <option value="" required>Select Tenant</option> <!--  disabled selected hidden? -->
+            ng-options="tenant._id as tenant.name for tenant in arLeaseCtrl.tenantFactory.tenants">
+            <option value="" required>Select Tenant</option> 
         </select>
-        <!--<input placeholder="Unit" type="text" ng-model="arLeaseCtl.newLease.unit.unitId" required="" />
-        <input placeholder="Tenant" type="text" ng-model="arLeaseCtl.newLease.tenant" required="" />-->
 
         <input placeholder="Date (today)" type="date" ng-model="arLeaseCtl.newLease.originalDate" />
         <input placeholder="Rate ({{arLeaseCtl.newLease.unit.unitType.defaultRate}})" type="number" ng-model="arLeaseCtl.newLease.rate" />

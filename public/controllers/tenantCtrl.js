@@ -2,7 +2,7 @@
 angular.module('AspenRental')
     .controller('ARTenantController', arTenantController);
 
-arTenantController.$inject = ['$http'];
+arTenantController.$inject = ['arTenantFactory','$http'];
 
 // validate tenant properties
 var validateTenant = function (tenant) {
@@ -35,11 +35,11 @@ var validateTenant = function (tenant) {
     return true;
 };
 
-function arTenantController($http) {
+function arTenantController(arTenantFactory,$http) {
     console.debug('ARTenantController loaded');
     var arTenantCtl = this;
 
-    arTenantCtl.tenants = [];
+    arTenantCtl.tenantFactory = arTenantFactory;
     arTenantCtl.newTenant = {};
 
     // var presaveTenant = function (tenant,fname, lname, addr, city = "Salida", state = "CO", zip = 81201, phone, email) {
@@ -56,24 +56,6 @@ function arTenantController($http) {
     //     tenant.comments = "";                                 // comments   
     // };
 
-    var getName = function(tenant) {
-        return tenant.firstName + " " + tenant.lastName;
-    };
-
-    arTenantCtl.getTenants = function () {
-        console.debug('getting tenants', arTenantCtl.tenants);
-        // TODO: add key for api
-        $http.get('/api/tenant')
-            .then(function (res) {
-                console.log("Received: Get /api/tenant", res.data);
-                arTenantCtl.tenants = res.data;
-            },function (error, status) {
-                err = { message: error, status: status };
-                console.log("ERROR /api/tenant: ",err.status);
-            });
-        console.debug('got tenants', arTenantCtl.tenants);
-        return arTenantCtl.tenants;
-    }
 
     // add a new customer
     arTenantCtl.addTenant = function () {
@@ -83,7 +65,7 @@ function arTenantController($http) {
             console.log("Posting tenant", arTenantCtl.newTenant)
             $http.post('/api/tenant', arTenantCtl.newTenant)
                 .then(function (res) {
-                    console.log("Received: Post /api/tenant", res.data);
+                    console.log("Tenants added", res.data);
                     arTenantCtl.tenants.push(res.data);
                 },function (error, status) {
                     err = { message: error, status: status };
@@ -107,7 +89,7 @@ function arTenantController($http) {
         // TODO:
         $http.put('/api/tenant', arTenantCtl.editTenant)
                 .then(function (res) {
-                    console.log("ERROR: Put /api/tenant", res.data);
+                    console.log("Tenants editted", res.data);
                     arTenantCtl.tenants.push(res.data);
                 },function (error, status) {
                     err = { message: error, status: status };
@@ -115,5 +97,4 @@ function arTenantController($http) {
                 });
     };
 
-    arTenantCtl.getTenants();
 };

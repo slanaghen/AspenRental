@@ -11,7 +11,7 @@
             <th>EMail</th>
             <th>Comments</th>
         </tr>
-        <tr ng-repeat="tenant in arTenantCtl.tenants  | orderBy:'name'">
+        <tr ng-repeat="tenant in arTenantCtl.tenantFactory.tenants  | orderBy:'name'">
             <td>{{ tenant.firstName }} {{ tenant.lastName }}</td>
             <td>{{ tenant.name }}</td>
             <td>{{ tenant.address }}, {{ tenant.city }}, {{ tenant.state }} {{ tenant.zip }}</td>
