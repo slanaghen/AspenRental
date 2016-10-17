@@ -53,12 +53,14 @@ function arUnitFactory($http) {
     var getAvailableUnitTypes = function () {
         console.debug("getting available unitTypes");
         for (var i = 0; i < UnitFactory.units.length; i++) {
+        console.log("Available? Unit "+i+" is "+UnitFactory.units[i].status);
             if (UnitFactory.units[i].status === 'Available') {
                 if (UnitFactory.availableUnitTypes.indexof(UnitFactory.units[i].unitType) === -1) {
                     UnitFactory.availableUnitTypes.push(UnitFactory.units[i].unitType);
                 }
             }
         }
+        console.log("Found "+UnitFactory.availableUnitTypes.length+" available unit types");
         return UnitFactory.availableUnitTypes;
     }
     getAvailableUnitTypes();

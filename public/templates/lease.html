@@ -26,15 +26,15 @@
             <th>Past Due</th>
             <th>Since</th>
         </tr>
-        <tr ng-repeat="lease in arLeaseCtl.pastDue() | orderBy:'-balance()'">
-            <td>{{ lease.unit.unitId }}</td>
+        <!--<tr ng-repeat="lease in arLeaseCtl.pastDue() | orderBy:'-balance()'">
+            <td>{{ lease.unit.name }}</td>
             <td>{{ lease.tenant }}</td>
-            <td>{{ lease.ref }}</td>
+            <td>{{ lease.name }}</td>
             <td>{{ lease.earliestUnpaidInvoice().ref }}</td>
             <td>{{ lease.balance() | currency }}</td>
             <td>{{ lease.daysPastDue() }} days</td>
             <td>{{ lease.earliestUnpaidInvoiceDate() | date }}</td>
-        </tr>
+        </tr>-->
     </table>
 
     <!-- table of leases -->
@@ -53,15 +53,15 @@
             <th>Balance</th>
             <th>Paid Thru</th>
         </tr>
-        <tr ng-repeat="lease in arLeaseCtl.leases | orderBy:'unit.unitId' | filter:arLeaseCtl.leaseFilter">
+        <tr ng-repeat="lease in arLeaseCtl.leaseFactory.leases | orderBy:'unit.unitId' | filter:arLeaseCtl.leaseFilter">
             <td>{{ lease.unit.name }}</td>
             <td>{{ lease.tenant.name }}</td>
             <td>{{ lease.name }}</td>
             <td>{{ lease.originalDate | date }}</td>
             <td>{{ lease.endDate() | date }}</td>
             <td>{{ lease.rate | currency }}/{{ lease.period }}</td>
-            <td>{{ lease.balance() | currency }}</td>
-            <td>{{ lease.paidThru() | date }}</td>
+            <!--<td>{{ lease.balance() | currency }}</td>
+            <td>{{ lease.paidThru() | date }}</td>-->
         </tr>
     </table>
 

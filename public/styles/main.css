@@ -50,17 +50,17 @@ tr:hover {
     position: relative; 
     z-index: 2; 
     }
-.navbar-nav.navbar-right .btn { 
+/*.navbar-nav.navbar-right .btn { 
     position: relative; 
     z-index: 2; 
     padding: 4px 20px; 
     margin: 10px auto; 
-    }
+    }*/
 .navbar .navbar-collapse { 
     position: relative; 
     }
 .navbar .navbar-collapse .navbar-right > li:last-child { 
-    padding-left: 22px; 
+    padding-right: 22px; 
     }
 .navbar .nav-collapse { 
     position: absolute; 

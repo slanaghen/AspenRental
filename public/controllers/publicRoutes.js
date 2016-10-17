@@ -13,9 +13,6 @@ console.log('Loading publicRoutes');
 function Router($routeProvider) {
     // This is where we define our routes
     $routeProvider
-        .when('/home/', {
-            templateUrl: '/templates/home.html'
-        })
         .when('/invoice/', {
             templateUrl: '/templates/invoice.html'
         })

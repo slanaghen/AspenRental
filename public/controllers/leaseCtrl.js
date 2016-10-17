@@ -2,7 +2,7 @@
 angular.module('AspenRental')
     .controller('ARLeaseController', arLeaseController);
 
-arLeaseController.$inject = ['arUnitFactory', 'arTenantFactory', '$http'];
+arLeaseController.$inject = ['arLeaseFactory', 'arUnitFactory', 'arTenantFactory', '$http'];
 
 // function homeController ($http) {
 // 	var hCtrl = this;
@@ -12,9 +12,10 @@ arLeaseController.$inject = ['arUnitFactory', 'arTenantFactory', '$http'];
 // 	};
 // };
 
-function arLeaseController(arUnitFactory, arTenantFactory, $http) {
+function arLeaseController(arLeaseFactory, arUnitFactory, arTenantFactory, $http) {
     console.debug('ARLeaseController loaded');
     var arLeaseCtl = this;
+    arLeaseCtl.leaseFactory = arLeaseFactory;
     arLeaseCtl.unitFactory = arUnitFactory;
     arLeaseCtl.tenantFactory = arTenantFactory;
 
@@ -147,7 +148,7 @@ function arLeaseController(arUnitFactory, arTenantFactory, $http) {
     };
 
     // enter a payment for the given lease
-    var makePayment = function(lease, amount, date) {
+    var addPayment = function(lease, amount, date) {
         lease.status = "Active";
         console.debug("Making payment of $" + amount + " for unit " +
             lease.unit.unitId + " on " + date.toDateString());
@@ -165,8 +166,8 @@ function arLeaseController(arUnitFactory, arTenantFactory, $http) {
         };
         // if all invoices are paid and there is an overpayment, 
         // create a future invoice and pay it.
-        lease.makeInvoice();
-        lease.makePayment(amount, date);
+        lease.addInvoice();
+        lease.addPayment(amount, date);
         return;
     };
 
@@ -220,35 +221,16 @@ function arLeaseController(arUnitFactory, arTenantFactory, $http) {
         };
     };
 
-
-
-    arLeaseCtl.leases = [];
     arLeaseCtl.newLease = {};
-
-    arLeaseCtl.getLeases = function () {
-        // load leases
-        // TODO: Filter for only active leases
-        // arLeaseCtl.leases = JSON.parse(localStorage.getItem('leases')) || dummyLeases;
-        console.debug('getting leases', arLeaseCtl.leases);
-        // TODO: add key for api
-        $http.get('/api/lease')
-                .then(function (res) {
-                    console.log("Leases received:", res.data);
-                    arLeaseCtl.leases = res.data;
-                },function (error, status) {
-                    var err = { message: "Leases error:"+error, status: status };
-                    console.log(err.status);
-                });
-        console.debug('got leases', arLeaseCtl.leases);
-        return arLeaseCtl.leases;
-    }
-
     // add a new lease
     // TODO: add validation
     arLeaseCtl.addLease = function () {
         if (validateLease(arLeaseCtl.newLease)) {
             arLeaseCtl.newLease.status = "Pending";
-            arLeaseCtl.newLease.name = "L" + String("0000" + arLeaseCtl.leases.length).slice(-4); // pad number with zeroes
+            arLeaseCtl.newLease.name = "L" + date.getFullYear().toString().slice(-2)
+                + ('0' + date.getMonth()).slice(-2)
+                + ('0' + date.getDate()).slice(-2)
+                + '-' + lease.unit.name; // pad number with zeroes
             $http.post('/api/lease', arLeaseCtl.newLease)
                 .then(function (res) {
                     console.log("Leases added:", res.data);
@@ -257,12 +239,11 @@ function arLeaseController(arUnitFactory, arTenantFactory, $http) {
                     var err = { message: "Leases add error:"+error, status: status };
                     console.log(err.status);
                 });
-            arLeaseCtl.leases.push(arLeaseCtl.newLease);
+            arLeaseCtl.leaseFactory.leases.push(arLeaseCtl.newLease);
             arLeaseCtl.newLease.unit.available = false;
             arLeaseCtl.newLease = {};
             console.debug("Valid lease added");
             arLeaseCtl.badLease = true;
-            // localStorage.setItem('leases', JSON.stringify(arCtrlr.leases));
         } else {
             console.debug("Invalid lease NOT added");
             arLeaseCtl.badLease = true;
@@ -273,11 +254,11 @@ function arLeaseController(arUnitFactory, arTenantFactory, $http) {
     arLeaseCtl.pastDue = function () {
         console.debug("getting past due leases"); 
         var pastDueLeases = [];
-        for (var i = 0; i < arLeaseCtl.leases.length; i++) {
+        for (var i = 0; i < arLeaseCtl.leaseFactory.leases.length; i++) {
             // if there is a balance on any past invoices, add to the list
             // Note that future invoices may exist and only be partially paid.
-            if (balance(arLeaseCtl.leases[i]) > 0 && arLeaseCtl.leases[i].earliestUnpaidInvoiceDate() < Date.now()) {
-                pastDueLeases.push(arLeaseCtl.leases[i]);
+            if (balance(arLeaseCtl.leaseFactory.leases[i]) > 0 && arLeaseCtl.leaseFactory.leases[i].earliestUnpaidInvoiceDate() < Date.now()) {
+                pastDueLeases.push(arLeaseCtl.leaseFactory.leases[i]);
             };
         };
         return pastDueLeases;
@@ -286,13 +267,12 @@ function arLeaseController(arUnitFactory, arTenantFactory, $http) {
     // create invoices for all current leases
     arLeaseCtl.invoiceAll = function () {
         console.debug("Invoicing all leases");
-        for (var i = 0; i < arLeaseCtl.leases.length; i++) {
-            // if nextDueDate is less than 15 days in the future, makeInvoice
-            if (arLeaseCtl.leases[i].nextDueDate() < (Date.now() + (15 * 24 * 60 * 60 * 1000))) {
-                arLeaseCtl.leases[i].makeInvoice(arLeaseCtl.leases[i]);
+        for (var i = 0; i < arLeaseCtl.leaseFactory.leases.length; i++) {
+            // if nextDueDate is less than 15 days in the future, addInvoice
+            if (arLeaseCtl.leaseFactory.leases[i].nextDueDate() < (Date.now() + (15 * 24 * 60 * 60 * 1000))) {
+                arLeaseCtl.leaseFactory.leases[i].addInvoice(arLeaseCtl.leaseFactory.leases[i]);
             };
         };
     };
-    arLeaseCtl.getLeases();
 };
 
